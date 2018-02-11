@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballField", "FootballField\FootballField.csproj", "{AA3510B0-D39B-4638-B905-396B0864C431}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eaglet", "Eaglet\Eaglet.csproj", "{46F61625-E417-4768-ACDB-A4B7B41C7CCC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA3510B0-D39B-4638-B905-396B0864C431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA3510B0-D39B-4638-B905-396B0864C431}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA3510B0-D39B-4638-B905-396B0864C431}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA3510B0-D39B-4638-B905-396B0864C431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46F61625-E417-4768-ACDB-A4B7B41C7CCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46F61625-E417-4768-ACDB-A4B7B41C7CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46F61625-E417-4768-ACDB-A4B7B41C7CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46F61625-E417-4768-ACDB-A4B7B41C7CCC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D45536B4-64C7-4859-9968-10C8BA70FA4F}
+	EndGlobalSection
+EndGlobal
