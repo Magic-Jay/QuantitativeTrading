@@ -53,7 +53,6 @@ namespace Eaglet.Business_Logic
             }
 
             double timeIncrement = Convert.ToDouble(t / (steps - 1));
-            double tmpSum = 0;
 
             try
             {
@@ -67,18 +66,14 @@ namespace Eaglet.Business_Logic
                         simulation[i, j] = simulation[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
                             sig * Math.Sqrt(timeIncrement) * RandomNumbers[i, j - 1]);
                     }
-
-                    tmpSum = tmpSum + Math.Pow((simulation[i, steps-1] - s), 2);
-                }
-                double standardDeviation = Math.Sqrt(tmpSum / (trials - 1));
-                //standarError = standardDeviation / (Math.Sqrt(trials));
+                   
+                }                                
             }
             catch (Exception ex)
             {
                 
             }
             
-
             return simulation;
         }
 
@@ -94,7 +89,7 @@ namespace Eaglet.Business_Logic
             //Formulat to Calculate Call/Put Price referenced from Lecture Notes
             for (int i = 0; i < trials; i++)
             {
-                //Save prices simulation for variance calcualtion
+                //Save simulated prices for variance calcualtion
                 pricesByTrial[0, i] = Math.Max(simulation[i, steps - 1] - k, 0);
                 pricesByTrial[1, i] = Math.Max(k - simulation[i, steps - 1], 0);
 
