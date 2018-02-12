@@ -80,9 +80,10 @@ namespace Fledgling.Business_Logic
         }
 
         //Algo to Generate Simulation using M.C Antithetic Variance Reduction
-        public static double[,] GenerateAntiTheticSimulation(int steps, int trials, double s, double t, double sig, double r)
+        public static Dictionary<string, double[,]> GenerateAntiTheticSimulation(int steps, int trials, double s, double t, double sig, double r)
         {
-            double[,] simulation = new double[trials, steps];
+            Dictionary<string, double[,]> simulations = new Dictionary<string, double[,]>();
+            double[,] simulationRegular = new double[trials, steps], simulationAtithetic = new double[trials, steps];
 
             if (RandomNumbers == null)
             {
@@ -93,25 +94,31 @@ namespace Fledgling.Business_Logic
 
             try
             {
-                //Formula to genearte simulation referenced from lecture notes
+                //Formula to genearte simulation using antithetic method referenced from lecture notes
                 for (int i = 0; i < trials; i++)
                 {
-                    simulation[i, 0] = s;
+                    simulationRegular[i, 0] = simulationAtithetic[i, 0] = s;
 
                     for (int j = 1; j < steps; j++)
                     {
-                        simulation[i, j] = simulation[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
+                        simulationRegular[i, j] = simulationRegular[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
                             sig * Math.Sqrt(timeIncrement) * RandomNumbers[i, j - 1]);
+
+                        simulationAtithetic[i, j] = simulationAtithetic[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
+                            sig * Math.Sqrt(timeIncrement) * (-1) * RandomNumbers[i, j]);
                     }
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex)    
             {
 
             }
 
-            return simulation;
+            simulations.Add("regular", simulationRegular);
+            simulations.Add("antithetic", simulationAtithetic);
+
+            return simulations;
         }
         #endregion
 
@@ -119,27 +126,58 @@ namespace Fledgling.Business_Logic
         public static Dictionary<string, double> GetPrices(int steps, int trials, double s, double k, double t,  double sig, double r)
         {
             #region Prices
-            double[,] simulation = GenerateSimulation(steps, trials, s, t, sig, r);
+            Dictionary<string, double> prices = new Dictionary<string, double>();
             double totalCallPrice = 0, totalPutPrice = 0, callPrice, putPrice;
             double[,] pricesByTrial = new double[2, trials];
-            Dictionary<string, double> prices = new Dictionary<string, double>();
+            double[,] simulation, simulationAntithetic;
 
-            //Formulat to Calculate Call/Put Price referenced from Lecture Notes
-            for (int i = 0; i < trials; i++)
+            if (!Antithetic)
             {
-                //Save simulated prices for variance calcualtion
-                pricesByTrial[0, i] = Math.Max(simulation[i, steps - 1] - k, 0);
-                pricesByTrial[1, i] = Math.Max(k - simulation[i, steps - 1], 0);
+                simulation = GenerateSimulation(steps, trials, s, t, sig, r);
 
-                totalCallPrice = totalCallPrice + pricesByTrial[0, i];
-                totalPutPrice = totalPutPrice + pricesByTrial[1, i];
+                //Formulat to Calculate Call/Put Price referenced from Lecture Notes
+                for (int i = 0; i < trials; i++)
+                {
+                    //Save simulated prices for variance calcualtion
+                    pricesByTrial[0, i] = Math.Max(simulation[i, steps - 1] - k, 0);
+                    pricesByTrial[1, i] = Math.Max(k - simulation[i, steps - 1], 0);
+
+                    totalCallPrice = totalCallPrice + pricesByTrial[0, i];
+                    totalPutPrice = totalPutPrice + pricesByTrial[1, i];
+                }
+
+                //Formula to Calcualte Simulation Option Price referenced from Lecture Notes: SUM/Trials * Discount_Factor
+                callPrice = totalCallPrice / trials * Math.Exp(-r * t);
+                putPrice = totalPutPrice / trials * Math.Exp(-r * t);
+                prices.Add("call", callPrice);
+                prices.Add("put", putPrice);
             }
+            else
+            {
+                var simulations = GenerateAntiTheticSimulation(steps, trials, s, t, sig, r);
+                simulation = simulations["regular"];
+                simulationAntithetic = simulations["antithetic"];
 
-            //Formula to Calcualte Simulation Option Price referenced from Lecture Notes: SUM/Trials * Discount_Factor
-            callPrice = totalCallPrice / trials * Math.Exp(-r * t);
-            putPrice = totalPutPrice / trials * Math.Exp(-r * t);
-            prices.Add("call", callPrice);
-            prices.Add("put", putPrice);
+                for (int i = 0; i < trials; i++)
+                {
+                    //Save simulated prices for variance calcualtion
+                    pricesByTrial[0, i] = 0.5 * (Math.Max(simulation[i, steps - 1] - k, 0) +
+                        Math.Max(simulationAntithetic[i, steps - 1] - k, 0));
+
+                    pricesByTrial[1, i] = 0.5 * (Math.Max(k - simulation[i, steps - 1], 0) +
+                        Math.Max(k - simulationAntithetic[i, steps - 1], 0));
+
+                    totalCallPrice = totalCallPrice + pricesByTrial[0, i];
+                    totalPutPrice = totalPutPrice + pricesByTrial[1, i];
+                }
+
+                //Formula to Calcualte Simulation Option Price referenced from Lecture Notes: SUM/Trials * Discount_Factor
+                callPrice = totalCallPrice / trials * Math.Exp(-r * t);
+                putPrice = totalPutPrice / trials * Math.Exp(-r * t);
+                prices.Add("call", callPrice);
+                prices.Add("put", putPrice);
+            }
+                                             
             #endregion
 
             #region Variance/Standard Error
@@ -165,6 +203,7 @@ namespace Fledgling.Business_Logic
             prices.Add("putStandardError", putStandardError);
             #endregion
 
+            Antithetic = false;
             return prices;
         }                  
 

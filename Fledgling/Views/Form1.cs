@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Fledgling.Business_Logic;
 using System.Diagnostics;
 
 
@@ -24,7 +23,7 @@ namespace Fledgling
         private void Form_Load(object sender, EventArgs e)
         {
             disable_CalcuateButton();
-            outputDataGridView.DataSource = PricingAlgo.SetDataTable();
+            outputDataGridView.DataSource = Business_Logic.PricingAlgo.SetDataTable();
         }
 
         private void calculateButton_Click(object sender, EventArgs e)
@@ -37,7 +36,12 @@ namespace Fledgling
             }
             else
             {
-                outputDataGridView.DataSource = PricingAlgo.SetDataTable();
+                foreach (var item in checkedListBox1.CheckedItems)
+                {
+                    Business_Logic.PricingAlgo.Antithetic = (item.ToString() == "Antithetic Variance Reduction");
+                   
+                }
+                
                 double s = String.IsNullOrEmpty(sTextBox.Text) ? 0 : Convert.ToDouble(sTextBox.Text);
                 double k = String.IsNullOrEmpty(kTextBox.Text) ? 0 : Convert.ToDouble(kTextBox.Text);
                 double t = String.IsNullOrEmpty(tenorTextbox.Text) ? 0 : Convert.ToDouble(tenorTextbox.Text);
@@ -48,10 +52,8 @@ namespace Fledgling
 
                 try
                 {
-                    outputDataGridView.DataSource = PricingAlgo.GetDataTable(steps, trials, s, k, t, sig, r);     
-                    timerLabel.Text = Convert.ToString(PricingAlgo.AlgoTime) + " sec";                    
-                    
-
+                    outputDataGridView.DataSource = Business_Logic.PricingAlgo.GetDataTable(steps, trials, s, k, t, sig, r);     
+                    timerLabel.Text = Convert.ToString(Business_Logic.PricingAlgo.AlgoTime) + " sec";                    
                 }
                 catch (Exception ex)
                 {
@@ -80,7 +82,7 @@ namespace Fledgling
             rTextBox.Text = "";
             stepsTextBox.Text = "";
             trialsTextBox.Text = "";
-            outputDataGridView.DataSource = PricingAlgo.SetDataTable();
+            outputDataGridView.DataSource = Business_Logic.PricingAlgo.SetDataTable();
             timerLabel.Text = "";            
         }
 
