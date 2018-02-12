@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Eaglet.Business_Logic
     public class PricingAlgo
     {
         private static double[,] RandomNumbers;
+        public static double AlgoTime;
 
         //Algo to Calculate Random Number from previous projects
         public static void GenerateRandomNumbers(int trials, int steps)
@@ -43,8 +45,7 @@ namespace Eaglet.Business_Logic
         //Algo to Generate Simulation using M.C Method
         public static double[,] GenerateSimulation(int steps, int trials, double s, double t, double sig, double r)
         {
-            double[,] simulation = new double[trials, steps];
-            //double[,] randomNumbers = GenerateRandomNumbers(trials, steps);
+            double[,] simulation = new double[trials, steps];            
 
             if (RandomNumbers == null)
             {
@@ -52,9 +53,11 @@ namespace Eaglet.Business_Logic
             }
 
             double timeIncrement = Convert.ToDouble(t / (steps - 1));
+            double tmpSum = 0;
 
             try
             {
+                //Formula to genearte simulation referenced from lecture notes
                 for (int i = 0; i < trials; i++)
                 {
                     simulation[i, 0] = s;
@@ -64,7 +67,11 @@ namespace Eaglet.Business_Logic
                         simulation[i, j] = simulation[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
                             sig * Math.Sqrt(timeIncrement) * RandomNumbers[i, j - 1]);
                     }
+
+                    tmpSum = tmpSum + Math.Pow((simulation[i, steps-1] - s), 2);
                 }
+                double standardDeviation = Math.Sqrt(tmpSum / (trials - 1));
+                //standarError = standardDeviation / (Math.Sqrt(trials));
             }
             catch (Exception ex)
             {
@@ -78,21 +85,55 @@ namespace Eaglet.Business_Logic
         //Algo to Calculate Call/Put Prices during M.C Simulaiton
         public static Dictionary<string, double> GetPrices(int steps, int trials, double s, double k, double t,  double sig, double r)
         {
-            double [,] simulation = GenerateSimulation(steps, trials, s, t, sig, r);
-            double [] totalPrices = new double [2];
+            #region Prices
+            double[,] simulation = GenerateSimulation(steps, trials, s, t, sig, r);
+            double totalCallPrice = 0, totalPutPrice = 0, callPrice, putPrice;
+            double[,] pricesByTrial = new double[2, trials];
             Dictionary<string, double> prices = new Dictionary<string, double>();
 
+            //Formulat to Calculate Call/Put Price referenced from Lecture Notes
             for (int i = 0; i < trials; i++)
             {
-                totalPrices[0] = totalPrices[0] + Math.Max(simulation[i, steps - 1] - k, 0);
-                totalPrices[1] = totalPrices[1] + Math.Max(k - simulation[i, steps - 1], 0);
+                //Save prices simulation for variance calcualtion
+                pricesByTrial[0, i] = Math.Max(simulation[i, steps - 1] - k, 0);
+                pricesByTrial[1, i] = Math.Max(k - simulation[i, steps - 1], 0);
+
+                totalCallPrice = totalCallPrice + pricesByTrial[0, i];
+                totalPutPrice = totalPutPrice + pricesByTrial[1, i];
             }
 
-            prices.Add("call", totalPrices[0] / trials);
-            prices.Add("put", totalPrices[1] / trials);
+            //Formula to Calcualte Simulation Option Price referenced from Lecture Notes: SUM/Trials * Discount_Factor
+            callPrice = totalCallPrice / trials * Math.Exp(-r * t);
+            putPrice = totalPutPrice / trials * Math.Exp(-r * t);
+            prices.Add("call", callPrice);
+            prices.Add("put", putPrice);
+            #endregion
+
+            #region Variance/Standard Error
+            double callSumDifference = 0, putSumDifference = 0;
+            double callStandardDeviation, putStandardDeviation;
+            double callStandardError, putStandardError;
+
+            //Formula to Calcualte StandardDeviation, StandardError from class notes: SD = Sqrt(1/(m-1) * Sum(C(0,j) - C0)^2) SE = SD/Sqrt(m)
+            for (int i = 0; i < trials; i++)
+            {
+                callSumDifference = callSumDifference + Math.Pow((pricesByTrial[0, i] - callPrice), 2);
+                putSumDifference = putSumDifference + Math.Pow((pricesByTrial[1, i] - putPrice), 2);
+            }
+
+            //standard deviation
+            callStandardDeviation = Math.Sqrt(callSumDifference / (trials - 1));
+            putStandardDeviation = Math.Sqrt(putSumDifference / (trials - 1));
+            //standard error
+            callStandardError = callStandardDeviation / (Math.Sqrt(trials));
+            putStandardError = putStandardDeviation / (Math.Sqrt(trials));
+
+            prices.Add("callStandardError", callStandardError);
+            prices.Add("putStandardError", putStandardError);
+            #endregion
 
             return prices;
-        }       
+        }                  
 
         public static DataTable SetDataTable()
         {
@@ -107,12 +148,16 @@ namespace Eaglet.Business_Logic
             table.Rows.Add("Theta", null, null);
             table.Rows.Add("Rho", null, null);
             table.Rows.Add("Vega", null, null);
+            table.Rows.Add("Standard Error", null, null);
 
             return table;
         }
 
         public static DataTable GetDataTable(int steps, int trials, double s, double k, double t, double sig, double r, double estimateLevel = 0.01)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             DataTable table = new DataTable();
             table.Columns.Add("Parameters", typeof(string));
             table.Columns.Add("Call", typeof(double));
@@ -120,17 +165,20 @@ namespace Eaglet.Business_Logic
 
             double sHigh = s * (1 + estimateLevel), sLow = s * (1 - estimateLevel);
             double tHigh = t * (1 + estimateLevel);
-            double rHigh = r * (1 + estimateLevel*2), rLow = r * (1 - estimateLevel*2);
+            
+            double rHigh = r * (1 + estimateLevel), rLow = r * (1 - estimateLevel);
             double sigHigh = sig * (1 + estimateLevel), sighLow = sig * (1 - estimateLevel);
 
             #region Price
             Dictionary<string, double> prices = GetPrices(steps, trials, s, k, t, sig, r);
-            double callPrice = prices["call"];
-            double putPrice = prices["put"];
-            //double callPrice = GetCallPrice(steps, trials, s, k, t, sig, r);
-            //double putPrice = GetPutPrice(steps, trials, s, k, t, sig, r);
+            double callPrice = Math.Round(prices["call"], 3);
+            double putPrice = Math.Round(prices["put"], 3);
             #endregion
 
+            #region StandardError
+            double callStandardError = Math.Round(prices["callStandardError"], 3);
+            double putStandardError = Math.Round(prices["putStandardError"], 3);
+            #endregion
 
             #region Delta 
             Dictionary<string, double> highUnderlytingPrices = GetPrices(steps, trials, sHigh, k, t, sig, r);
@@ -139,71 +187,67 @@ namespace Eaglet.Business_Logic
             Dictionary<string, double> lowUnderlyingPrices = GetPrices(steps, trials, sLow, k, t, sig, r);
             double lowUnderlyingCallPrice = lowUnderlyingPrices["call"], lowUnderlyingPutPrice = lowUnderlyingPrices["put"];
 
-            //Formula to Calculate Delta referenced from class notes: dc/ds
-            double callDelta = (highUnderlyingCallPrice - callPrice) / (estimateLevel * s);
-            double putDelta = (highUnderlyingPutPrice - putPrice) / (estimateLevel * s);             
+            //Formula to Calculate Delta referenced from class notes: dC/dS
+            double callDelta = Math.Round((highUnderlyingCallPrice - callPrice) / (estimateLevel * s), 3);
+            double putDelta = Math.Round((highUnderlyingPutPrice - putPrice) / (estimateLevel * s), 3);
             #endregion
 
             #region Gamma 
-            //Formula to Calculate Gamma referencing class notes: d^2c/ds^2
-            double callGamma = (highUnderlyingCallPrice - 2 * callPrice + lowUnderlyingCallPrice) / (Math.Pow(estimateLevel * s, 2));           
-            double putGamma = (highUnderlyingPutPrice - 2 * putPrice + lowUnderlyingPutPrice) / (Math.Pow(estimateLevel * s, 2));
+            //Formula to Calculate Gamma referencing class notes: d^2C/dS^2
+            double callGamma = Math.Round((highUnderlyingCallPrice - 2 * callPrice + lowUnderlyingCallPrice) / (Math.Pow(estimateLevel * s, 2)), 3);
+            double putGamma = Math.Round((highUnderlyingPutPrice - 2 * putPrice + lowUnderlyingPutPrice) / (Math.Pow(estimateLevel * s, 2)), 3);
             #endregion  
 
             #region Theta
             Dictionary<string, double> highTPrices = GetPrices(steps, trials, s, k, tHigh, sig, r);
             double highTCallPrice = highTPrices["call"], highTPutPrice = highTPrices["put"];
 
-            //Formula to calculate Theta referencing class notes: dc/dt
-            double callTheta = -(highTCallPrice - callPrice) / (estimateLevel * t);                 
-            double putTheta = -(highTPutPrice - putPrice) / (estimateLevel * t);
+            //Formula to calculate Theta referencing class notes: dC/dt
+            double callTheta = Math.Round(-(highTCallPrice - callPrice) / (estimateLevel * t), 3);
+            double putTheta = Math.Round(-(highTPutPrice - putPrice) / (estimateLevel * t), 3);
             #endregion
 
-            //#region Rho
-            //esiteamteLevel = 0.01
-            //double rHigh = r * (1 + estimateLevel * 2), rLow = r * (1 - estimateLevel * 2);
+            #region Rho        
             Dictionary<string, double> highRPrices = GetPrices(steps, trials, s, k, t, sig, rHigh);
             double highRCallPrice = highRPrices["call"], highRPutPrice = highRPrices["put"];
 
             Dictionary<string, double> lowRPrices = GetPrices(steps, trials, s, k, t, sig, rLow);
             double lowRCallPrice = lowRPrices["call"], lowRPutPrice = lowRPrices["put"];
 
-            double callRho = (highRCallPrice - lowRCallPrice) / (2 * estimateLevel*2 * r);
-            double putRho = (highRPutPrice - lowRPutPrice) / (2 * estimateLevel*2 * r);
-            //double callRho = (GetCallPrice(steps, trials, s, k, t, sig, rHigh) - GetCallPrice(steps, trials, s, k, t, sig, rLow)) /
-            //    (2 * estimateLevel * r);
+            //Formula to calculate Rho: dC/dr
+            double callRho = Math.Round((highRCallPrice - lowRCallPrice) / (2 * estimateLevel * r), 3);
+            double putRho = Math.Round((highRPutPrice - lowRPutPrice) / (2 * estimateLevel * r), 3);
+            #endregion
 
-            //double putRho = (GetPutPrice(steps, trials, s, k, t, sig, rHigh) - GetPutPrice(steps, trials, s, k, t, sig, rLow)) /
-            //    (2 * estimateLevel * r);
-            //#endregion
-
-            //#region Vega           
+            #region Vega           
             Dictionary<string, double> highSigPrices = GetPrices(steps, trials, s, k, t, sigHigh, r);
             double highSigCallPrice = highSigPrices["call"], highSigPutPrice = highSigPrices["put"];
 
             Dictionary<string, double> lowSigPrices = GetPrices(steps, trials, s, k, t, sighLow, r);
             double lowSigCallPrice = lowSigPrices["call"], lowSigPutPrice = lowSigPrices["put"];
 
-            double callVega = (highSigCallPrice - lowSigCallPrice) / (2 * estimateLevel * sig);
-            double putVega = (highSigPutPrice - lowSigPutPrice) / (2 * estimateLevel * sig);
-            //double callVega = (GetCallPrice(steps, trials, s, k, t, sigHigh, r) - GetCallPrice(steps, trials, s, k, t, sighLow, r)) /
-            //    (2 * estimateLevel * sig);
+            //Formula to calcualte Vega: dC/dsig
+            double callVega = Math.Round((highSigCallPrice - lowSigCallPrice) / (2 * estimateLevel * sig), 3);
+            double putVega = Math.Round((highSigPutPrice - lowSigPutPrice) / (2 * estimateLevel * sig), 3);
+            #endregion
 
-            //double putVega = (GetPutPrice(steps, trials, s, k, t, sigHigh, r) - GetPutPrice(steps, trials, s, k, t, sighLow, r)) /
-            //    (2 * estimateLevel * sig);
-            //#endregion
 
             table.Rows.Add("Thoretical Price", callPrice, putPrice);
             table.Rows.Add("Delta", callDelta, putDelta);
-            //table.Rows.Add("Gamma", callGamma, putGamma);
+            table.Rows.Add("Gamma", callGamma, putGamma);
             table.Rows.Add("Theta", callTheta, putTheta);
             table.Rows.Add("Rho", callRho, putRho);
             table.Rows.Add("Vega", callVega, putVega);
+            table.Rows.Add("Standard Error", callStandardError, putStandardError);
 
             //reset RandomNumbers after each Pricing Request
             RandomNumbers = null;
 
+            stopwatch.Stop();
+            AlgoTime = Math.Round(stopwatch.Elapsed.TotalSeconds, 2);
             return table;
+            
+
 
         }
 
