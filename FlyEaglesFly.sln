@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballField", "FootballFi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eaglet", "Eaglet\Eaglet.csproj", "{46F61625-E417-4768-ACDB-A4B7B41C7CCC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fledgling", "Fledgling\Fledgling.csproj", "{D4BBE341-A523-4001-AE0D-6F1880360095}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{46F61625-E417-4768-ACDB-A4B7B41C7CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46F61625-E417-4768-ACDB-A4B7B41C7CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46F61625-E417-4768-ACDB-A4B7B41C7CCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4BBE341-A523-4001-AE0D-6F1880360095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4BBE341-A523-4001-AE0D-6F1880360095}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4BBE341-A523-4001-AE0D-6F1880360095}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4BBE341-A523-4001-AE0D-6F1880360095}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
