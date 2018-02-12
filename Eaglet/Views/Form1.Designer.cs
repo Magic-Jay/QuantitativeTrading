@@ -46,7 +46,6 @@
             this.timerLabel = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.StandardErrorPanel = new System.Windows.Forms.Panel();
-            this.standardErrorLabel = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.outputDataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -248,9 +247,8 @@
             this.timerLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(84)))));
             this.timerLabel.Location = new System.Drawing.Point(19, 37);
             this.timerLabel.Name = "timerLabel";
-            this.timerLabel.Size = new System.Drawing.Size(306, 82);
+            this.timerLabel.Size = new System.Drawing.Size(0, 82);
             this.timerLabel.TabIndex = 2;
-            this.timerLabel.Text = "5.55 sec";
             // 
             // label10
             // 
@@ -266,7 +264,6 @@
             // StandardErrorPanel
             // 
             this.StandardErrorPanel.BackColor = System.Drawing.Color.White;
-            this.StandardErrorPanel.Controls.Add(this.standardErrorLabel);
             this.StandardErrorPanel.Controls.Add(this.label9);
             this.StandardErrorPanel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(84)))));
             this.StandardErrorPanel.Location = new System.Drawing.Point(3, 5);
@@ -274,25 +271,15 @@
             this.StandardErrorPanel.Size = new System.Drawing.Size(217, 114);
             this.StandardErrorPanel.TabIndex = 0;
             // 
-            // standardErrorLabel
-            // 
-            this.standardErrorLabel.AutoSize = true;
-            this.standardErrorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.standardErrorLabel.Location = new System.Drawing.Point(16, 37);
-            this.standardErrorLabel.Name = "standardErrorLabel";
-            this.standardErrorLabel.Size = new System.Drawing.Size(306, 82);
-            this.standardErrorLabel.TabIndex = 1;
-            this.standardErrorLabel.Text = "5.55 sec";
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(3, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(175, 28);
+            this.label9.Size = new System.Drawing.Size(109, 28);
             this.label9.TabIndex = 0;
-            this.label9.Text = "Standard Error";
+            this.label9.Text = "Progress";
             // 
             // outputDataGridView
             // 
@@ -345,8 +332,9 @@
             // 
             // checkedListBox1
             // 
-            this.checkedListBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(84)))));
+            this.checkedListBox1.BackColor = System.Drawing.Color.Gray;
             this.checkedListBox1.CheckOnClick = true;
+            this.checkedListBox1.Enabled = false;
             this.checkedListBox1.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkedListBox1.ForeColor = System.Drawing.Color.White;
             this.checkedListBox1.FormattingEnabled = true;
@@ -583,7 +571,6 @@
         private System.Windows.Forms.Panel StandardErrorPanel;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label timerLabel;
-        private System.Windows.Forms.Label standardErrorLabel;
     }
 }
 

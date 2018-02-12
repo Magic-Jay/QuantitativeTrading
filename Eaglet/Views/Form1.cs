@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Eaglet.Business_Logic;
+using System.Diagnostics;
 
 
 
@@ -36,6 +37,7 @@ namespace Eaglet
             }
             else
             {
+                outputDataGridView.DataSource = PricingAlgo.SetDataTable();
                 double s = String.IsNullOrEmpty(sTextBox.Text) ? 0 : Convert.ToDouble(sTextBox.Text);
                 double k = String.IsNullOrEmpty(kTextBox.Text) ? 0 : Convert.ToDouble(kTextBox.Text);
                 double t = String.IsNullOrEmpty(tenorTextbox.Text) ? 0 : Convert.ToDouble(tenorTextbox.Text);
@@ -46,7 +48,10 @@ namespace Eaglet
 
                 try
                 {
-                    outputDataGridView.DataSource = PricingAlgo.GetDataTable(steps, trials, s, k, t, sig, r);
+                    outputDataGridView.DataSource = PricingAlgo.GetDataTable(steps, trials, s, k, t, sig, r);     
+                    timerLabel.Text = Convert.ToString(PricingAlgo.AlgoTime) + " sec";
+                    
+
                 }
                 catch (Exception ex)
                 {
@@ -76,7 +81,7 @@ namespace Eaglet
             stepsTextBox.Text = "";
             trialsTextBox.Text = "";
             outputDataGridView.DataSource = PricingAlgo.SetDataTable();
-            disable_CalcuateButton();
+            timerLabel.Text = "";            
         }
 
         private void disable_CalcuateButton()
@@ -128,7 +133,8 @@ namespace Eaglet
             double num;
             if (!double.TryParse(c.Text, out num) || num < 0)
             {
-                errorProvider1.SetError(c, "Please Enter a Positive Number!");                
+                errorProvider1.SetError(c, "Please Enter a Positive Number!");
+                disable_CalcuateButton();
             }
             else
             {
@@ -152,8 +158,6 @@ namespace Eaglet
                 calculatePriceButton.BackColor = System.Drawing.Color.FromArgb(0, 167, 181);
             }
         }
-
-
 
         #endregion
 
