@@ -53,7 +53,9 @@ namespace Fledgling
                 try
                 {
                     outputDataGridView.DataSource = Business_Logic.PricingAlgo.GetDataTable(steps, trials, s, k, t, sig, r);     
-                    timerLabel.Text = Convert.ToString(Business_Logic.PricingAlgo.AlgoTime) + " sec";                    
+                    timerLabel.Text = Convert.ToString(Business_Logic.PricingAlgo.AlgoTime) + " sec";
+
+                    //MessageBox.Show("Calculation Succeed!" + Business_Logic.PricingAlgo.log);
                 }
                 catch (Exception ex)
                 {
