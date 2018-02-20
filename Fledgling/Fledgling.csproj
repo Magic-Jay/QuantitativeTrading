@@ -114,6 +114,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\correlated_paths.pdf" />
     <None Include="Resources\logo.PNG" />
   </ItemGroup>
   <ItemGroup>
