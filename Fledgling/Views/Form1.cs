@@ -71,8 +71,8 @@ namespace Fledgling
             tenorTextbox.Text = "1";
             sigTextBox.Text = "50";
             rTextBox.Text = "5";
-            stepsTextBox.Text = "252";
-            trialsTextBox.Text = "1000";
+            stepsTextBox.Text = "100";
+            trialsTextBox.Text = "10000";
         }
 
         private void clearingButton_Click(object sender, EventArgs e)

@@ -235,8 +235,6 @@ namespace Fledgling.Business_Logic
             //See PDF Documentation on correlated path in the resources for mathematical proofs. 
             #endregion
 
-            //reset Antithetic property after each pricing request
-            Antithetic = false;
             return prices;
         }                  
 
@@ -347,6 +345,9 @@ namespace Fledgling.Business_Logic
 
             //reset RandomNumbers after each Pricing Request
             RandomNumbers = null;
+
+            //reset Antithetic property after each pricing request
+            Antithetic = false;
 
             stopwatch.Stop();
             AlgoTime = Math.Round(stopwatch.Elapsed.TotalSeconds, 2);

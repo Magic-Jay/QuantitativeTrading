@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eaglet", "Eaglet\Eaglet.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fledgling", "Fledgling\Fledgling.csproj", "{D4BBE341-A523-4001-AE0D-6F1880360095}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballFieldWeb", "FootballFieldWeb\FootballFieldWeb.csproj", "{C3EDE2CD-AADD-4E0D-86E5-ED28DB639B26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{D4BBE341-A523-4001-AE0D-6F1880360095}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4BBE341-A523-4001-AE0D-6F1880360095}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4BBE341-A523-4001-AE0D-6F1880360095}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3EDE2CD-AADD-4E0D-86E5-ED28DB639B26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3EDE2CD-AADD-4E0D-86E5-ED28DB639B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3EDE2CD-AADD-4E0D-86E5-ED28DB639B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3EDE2CD-AADD-4E0D-86E5-ED28DB639B26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
