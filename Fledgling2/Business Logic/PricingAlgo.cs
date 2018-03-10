@@ -3,16 +3,22 @@ using System.Data;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Fledgling.Business_Logic
+namespace Fledgling2.Business_Logic
 {
     public class PricingAlgo
     {
         private static double[,] RandomNumbers;
         public static double AlgoTime;
-        public static bool Antithetic;
+
+        //Set VarianceReduction Option
+        public static Dictionary<string, bool> VaraianceReductionOptions = new Dictionary<string, bool>()
+        {
+            {"Antithetic_Variance_Reduction", false },
+            {"Control_Variate", false },
+            {"MultiThread",false }
+        };
+        
         public static string log = "";
 
         //Algo to Calculate Random Number from previous projects
@@ -132,6 +138,8 @@ namespace Fledgling.Business_Logic
 
             return simulations;
         }
+
+        
         #endregion
 
         //Algo to Calculate Call/Put Prices during M.C Simulaiton
@@ -141,10 +149,10 @@ namespace Fledgling.Business_Logic
             Dictionary<string, double> prices = new Dictionary<string, double>();
             double totalCallPrice = 0, totalPutPrice = 0, callPrice = 0, putPrice = 0;
             double[,] pricesByTrial = new double[2, trials];            
-
+            var antithetic = VaraianceReductionOptions["Antithetic_Variance_Reduction"];
             try
             {
-                if (!Antithetic)
+                if (!antithetic)
                 {
                     var simulation = GenerateSimulation(steps, trials, s, t, sig, r);
 
@@ -346,8 +354,12 @@ namespace Fledgling.Business_Logic
             //reset RandomNumbers after each Pricing Request
             RandomNumbers = null;
 
-            //reset Antithetic property after each pricing request
-            Antithetic = false;
+            //reset Variance/Algo Speed Option after each pricing request
+            //Antithetic = false;
+            foreach (var key in VaraianceReductionOptions.Keys.ToList())
+            {
+                VaraianceReductionOptions[key] = false;
+            }
 
             stopwatch.Stop();
             AlgoTime = Math.Round(stopwatch.Elapsed.TotalSeconds, 2);

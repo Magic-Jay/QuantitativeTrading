@@ -11,7 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fledgling", "Fledgling\Fled
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballFieldWeb", "FootballFieldWeb\FootballFieldWeb.csproj", "{C3EDE2CD-AADD-4E0D-86E5-ED28DB639B26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fledgling2", "Fledgling2\Fledgling2.csproj", "{D2F758D6-B1A0-40A5-8AEB-DC71550C4022}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88485D1D-E479-4F02-8620-1ACF2E2B4D0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2F758D6-B1A0-40A5-8AEB-DC71550C4022}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2F758D6-B1A0-40A5-8AEB-DC71550C4022}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2F758D6-B1A0-40A5-8AEB-DC71550C4022}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2F758D6-B1A0-40A5-8AEB-DC71550C4022}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
