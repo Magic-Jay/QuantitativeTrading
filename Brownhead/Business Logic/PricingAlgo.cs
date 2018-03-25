@@ -59,116 +59,8 @@ namespace Brownhead.Business_Logic
         }
 
         #region Monte Carlo Simulation
-        //Algo to Generate Simulation using M.C Method
 
-        #region old
-        //public static Dictionary<string, double[,]> GenerateSimulation(int steps, int trials, double s, double k, double t, double sig, double r)
-        //{
-        //    Dictionary<string, double[,]> simulations = new Dictionary<string, double[,]>();
-        //    double[,] simulation = new double[trials, steps];
-        //    double[,] controlVariatePathCall = new double[trials, steps];
-        //    var controlVariate = VaraianceReductionOptions["Control_Variate"];
-        //    double tHedge, delta;
-
-        //    if (RandomNumbers == null)
-        //    {
-        //        GenerateRandomNumbers(trials, steps);
-        //    }
-
-        //    double timeIncrement = Convert.ToDouble(t / (steps - 1));
-
-        //    try
-        //    {
-        //        //Formula to genearte simulation referenced from lecture notes
-        //        for (int i = 0; i < trials; i++)
-        //        {
-        //            simulation[i, 0] = s;
-        //            controlVariatePathCall[i, 0] = 0;
-
-        //            for (int j = 1; j < steps; j++)
-        //            {
-        //                simulation[i, j] = simulation[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
-        //                    sig * Math.Sqrt(timeIncrement) * RandomNumbers[i, j - 1]);
-
-        //                if (controlVariate)
-        //                {
-        //                    tHedge = (i - 1) * timeIncrement;
-        //                    delta = BlackScholesDeltas(s, k, t, tHedge, sig, r);
-        //                    controlVariatePathCall[i, j] = controlVariatePathCall[i, j - 1] + 
-        //                        delta * (simulation[i, j] - simulation[i, j - 1] * Math.Exp(r * timeIncrement));//Delta Hedge
-        //                }
-        //            }
-
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log = ex.Message + " at GenerateSimulation()";
-        //    }
-
-        //    simulations.Add("simulationRegular", simulation);
-        //    simulations.Add("controlVariatePathCall", controlVariatePathCall);
-        //    return simulations;
-        //}
-
-        ////Algo to Generate Simulation using M.C Antithetic Variance Reduction
-        //public static Dictionary<string, double[,]> GenerateAntiTheticSimulation(int steps, int trials, double s, double k, double t, double sig, double r)
-        //{
-        //    Dictionary<string, double[,]> simulations = new Dictionary<string, double[,]>();
-        //    double[,] simulationRegular = new double[trials, steps], simulationAtithetic = new double[trials, steps], 
-        //        controlVariatePathAntiThetic = new double[trials, steps];
-        //    var controlVariate = VaraianceReductionOptions["Control_Variate"];
-        //    double tHedge, delta;
-
-        //    if (RandomNumbers == null)
-        //    {
-        //        GenerateRandomNumbers(trials, steps);
-        //    }
-
-        //    double timeIncrement = Convert.ToDouble(t / (steps - 1));
-
-        //    try
-        //    {
-        //        //Formula to genearte simulation using antithetic method referenced from lecture notes
-        //        for (int i = 0; i < trials; i++)
-        //        {
-        //            simulationRegular[i, 0] = s;
-        //            simulationAtithetic[i, 0] = s;
-        //            controlVariatePathAntiThetic[i, 0] = 0;
-
-        //            for (int j = 1; j < steps; j++)
-        //            {                       
-        //                simulationRegular[i, j] = simulationRegular[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
-        //                    sig * Math.Sqrt(timeIncrement) * RandomNumbers[i, j - 1]);
-
-        //                simulationAtithetic[i, j] = simulationAtithetic[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
-        //                    sig * Math.Sqrt(timeIncrement) * (-1) * RandomNumbers[i, j - 1]);
-
-        //                if (controlVariate)
-        //                {
-        //                    tHedge = (i - 1) * timeIncrement;
-        //                    delta = BlackScholesDeltas(s, k, t, tHedge, sig, r);
-        //                    controlVariatePathAntiThetic[i, j] = controlVariatePathAntiThetic[i, j - 1] + delta * 
-        //                        (simulationAtithetic[i, j] - simulationAtithetic[i, j - 1] * Math.Exp(r * timeIncrement));
-        //                }
-
-        //            }
-
-        //        }
-
-        //    }
-        //    catch (Exception ex)    
-        //    {
-        //        log = ex.Message + " at GenerateAntiTheticSimulation()";
-        //    }
-
-        //    simulations.Add("regular", simulationRegular);
-        //    simulations.Add("antithetic", simulationAtithetic);
-        //    simulations.Add("controlVariateAntiThetic", controlVariatePathAntiThetic);
-
-        //    return simulations;
-        //}
-#endregion
+        //Algo to Generate Simulation using M.C Method      
         public static Dictionary<string, double[,]> GenerateSimulations(int steps, int trials, double s, double k, double t, double sig, double r)
         {
             Dictionary<string, double[,]> simulations = new Dictionary<string, double[,]>();
@@ -201,36 +93,54 @@ namespace Brownhead.Business_Logic
 
                     for (int j = 1; j < steps; j++)
                     {
-                        tHedge = (i - 1) * timeIncrement;
-                        deltaCall = BlackScholesDeltas(s, k, t, tHedge, sig, r)["deltaCall"];
-                        deltaPut = BlackScholesDeltas(s, k, t, tHedge, sig, r)["deltaCall"];
                         
+                        
+                        //regular
                         simulationRegular[i, j] = simulationRegular[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
                             sig * Math.Sqrt(timeIncrement) * RandomNumbers[i, j - 1]);
 
-                        if (controlVariate)
-                        {                            
+                        //antithetic not control variate 
+                        if (antithetic && !controlVariate)
+                        {
+                            simulationAtithetic[i, j] = simulationAtithetic[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
+                            sig * Math.Sqrt(timeIncrement) * (-1) * RandomNumbers[i, j - 1]);
+                        }
+
+                        //control variate but not antithetic
+                        if (controlVariate && !antithetic)
+                        {
+                            tHedge = (i - 1) * timeIncrement;
+                            deltaCall = BlackScholesDeltas(s, k, t, tHedge, sig, r)["deltaCall"];
+                            deltaPut = BlackScholesDeltas(s, k, t, tHedge, sig, r)["deltaCall"];
+
                             controlVariatePathCall[i, j] = controlVariatePathCall[i, j - 1] + deltaCall *
                                 (simulationRegular[i, j] - simulationRegular[i, j - 1] * Math.Exp(r * timeIncrement));
                             controlVariatePathPut[i, j] = controlVariatePathPut[i, j - 1] + deltaPut *
                                 (simulationRegular[i, j] - simulationRegular[i, j - 1] * Math.Exp(r * timeIncrement));
                         }
 
-                        if (antithetic)
+                        //control variate and antithetic
+                        if (antithetic && controlVariate)
                         {
-                            simulationAtithetic[i, j] = simulationAtithetic[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
-                            sig * Math.Sqrt(timeIncrement) * (-1) * RandomNumbers[i, j - 1]);
+                            tHedge = (i - 1) * timeIncrement;
+                            deltaCall = BlackScholesDeltas(s, k, t, tHedge, sig, r)["deltaCall"];
+                            deltaPut = BlackScholesDeltas(s, k, t, tHedge, sig, r)["deltaCall"];
 
-                            if (controlVariate)
-                            {
-                                //tHedge = (i - 1) * timeIncrement;
-                                //deltaCall = BlackScholesDeltas(s, k, t, tHedge, sig, r)["deltaCall"];
-                                //deltaPut = BlackScholesDeltas(s, k, t, tHedge, sig, r)["deltaPut"];
-                                controlVariatePathAntiTheticCall[i, j] = controlVariatePathAntiTheticCall[i, j - 1] + deltaCall *
-                                    (simulationAtithetic[i, j] - simulationAtithetic[i, j - 1] * Math.Exp(r * timeIncrement));
-                                controlVariatePathAntiTheticPut[i, j] = controlVariatePathAntiTheticPut[i, j - 1] + deltaPut *
-                                    (simulationAtithetic[i, j] - simulationAtithetic[i, j - 1] * Math.Exp(r * timeIncrement));
-                            }
+                            //antithetic simulation
+                            simulationAtithetic[i, j] = simulationAtithetic[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
+                            sig * Math.Sqrt(timeIncrement) * (-1) * RandomNumbers[i, j - 1]);                                                   
+                            
+                            //control variate regular 
+                            controlVariatePathCall[i, j] = controlVariatePathCall[i, j - 1] + deltaCall *
+                               (simulationRegular[i, j] - simulationRegular[i, j - 1] * Math.Exp(r * timeIncrement));
+                            controlVariatePathPut[i, j] = controlVariatePathPut[i, j - 1] + deltaPut *
+                                (simulationRegular[i, j] - simulationRegular[i, j - 1] * Math.Exp(r * timeIncrement));
+
+                            //control variate antithetic
+                            controlVariatePathAntiTheticCall[i, j] = controlVariatePathAntiTheticCall[i, j - 1] + deltaCall *
+                                (simulationAtithetic[i, j] - simulationAtithetic[i, j - 1] * Math.Exp(r * timeIncrement));
+                            controlVariatePathAntiTheticPut[i, j] = controlVariatePathAntiTheticPut[i, j - 1] + deltaPut *
+                                (simulationAtithetic[i, j] - simulationAtithetic[i, j - 1] * Math.Exp(r * timeIncrement));                           
                         }                                              
                     }
 
@@ -304,7 +214,7 @@ namespace Brownhead.Business_Logic
 
             var simulations = GenerateSimulations(steps, trials, s, k, t, sig, r);
             var simulationRegular = simulations["regular"];
-            var simulationAtithetic = simulations["antithetic"];
+            var simulationAntithetic = simulations["antithetic"];
             var controlVariatePathCall = simulations["controlVariatePathCall"];
             var controlVariatePathPut = simulations["controlVariatePathPut"];
             var controlVariatePathAntiTheticCall = simulations["controlVariatePathAntiTheticCall"];
@@ -319,12 +229,13 @@ namespace Brownhead.Business_Logic
                     {
                         if (controlVariate)
                         {
+                            //control variate price
                             pricesByTrial[0, i] = Math.Max(simulationRegular[i, steps - 1] - k, 0) - controlVariatePathCall[i, steps - 1];
                             pricesByTrial[1, i] = Math.Max(k - simulationRegular[i, steps - 1], 0) - controlVariatePathPut[i, steps - 1];
                         }
                         else
                         {
-                            //Save simulated prices for variance calcualtion
+                            //regular price
                             pricesByTrial[0, i] = Math.Max(simulationRegular[i, steps - 1] - k, 0);
                             pricesByTrial[1, i] = Math.Max(k - simulationRegular[i, steps - 1], 0);
                         }
@@ -332,14 +243,6 @@ namespace Brownhead.Business_Logic
                         totalCallPrice = totalCallPrice + pricesByTrial[0, i];
                         totalPutPrice = totalPutPrice + pricesByTrial[1, i];
                     }
-
-                    ////Formula to Calcualte Simulation Option Price referenced from Lecture Notes: SUM/Trials * Discount_Factor
-                    //callPrice = totalCallPrice / trials * Math.Exp(-r * t);
-                    //putPrice = totalPutPrice / trials * Math.Exp(-r * t);
-                    //prices.Add("call", callPrice);
-                    //prices.Add("put", putPrice);
-
-
                 }
                 else
                 {                    
@@ -347,32 +250,28 @@ namespace Brownhead.Business_Logic
                     {
                         if (controlVariate)
                         {
+                            //antithetic and control variate price
                             pricesByTrial[0, i] = 0.5 * (Math.Max(simulationRegular[i, steps - 1] - k, 0) - controlVariatePathCall[i, steps - 1]
-                                + Math.Max(simulationAtithetic[i, steps - 1] - k, 0) - controlVariatePathAntiTheticCall[i, steps - 1]);
+                                + Math.Max(simulationAntithetic[i, steps - 1] - k, 0) - controlVariatePathAntiTheticCall[i, steps - 1]);
 
                             pricesByTrial[1, i] = 0.5 * (Math.Max(k - simulationRegular[i, steps - 1], 0) - controlVariatePathPut[i, steps - 1] 
-                                + Math.Max(k - simulationAtithetic[i, steps - 1], 0) - controlVariatePathAntiTheticPut[i, steps - 1]);
+                                + Math.Max(k - simulationAntithetic[i, steps - 1], 0) - controlVariatePathAntiTheticPut[i, steps - 1]);
                         }
                         else
                         {
-                            //Save simulated prices for variance calcualtion
+                            //antithetic price
                             pricesByTrial[0, i] = 0.5 * (Math.Max(simulationRegular[i, steps - 1] - k, 0) +
-                            Math.Max(simulationAtithetic[i, steps - 1] - k, 0));
+                            Math.Max(simulationAntithetic[i, steps - 1] - k, 0));
 
                             pricesByTrial[1, i] = 0.5 * (Math.Max(k - simulationRegular[i, steps - 1], 0) +
-                                Math.Max(k - simulationAtithetic[i, steps - 1], 0));
+                                Math.Max(k - simulationAntithetic[i, steps - 1], 0));
 
                         }
 
                         totalCallPrice = totalCallPrice + pricesByTrial[0, i];
                         totalPutPrice = totalPutPrice + pricesByTrial[1, i];
                     }
-
-                    ////Formula to Calcualte Simulation Option Price referenced from Lecture Notes: SUM/Trials * Discount_Factor
-                    //callPrice = totalCallPrice / trials * Math.Exp(-r * t);
-                    //putPrice = totalPutPrice / trials * Math.Exp(-r * t);
-                    //prices.Add("call", callPrice);
-                    //prices.Add("put", putPrice);
+                   
                 }
 
                 //Formula to Calcualte Simulation Option Price referenced from Lecture Notes: SUM/Trials * Discount_Factor
@@ -551,121 +450,5 @@ namespace Brownhead.Business_Logic
 
         }
 
-        //useful for later project
-        //#region Black-Scholes Parameters
-        ////Black-Scholes Formula 
-        //double d1 = (Math.Log(s / k) + t * (r - 0 + (Math.Pow(sig, 2) / 2))) / (sig * Math.Sqrt(t));
-        //double d2 = d1 - sig * Math.Sqrt(t);
-        //#endregion
-        ////Algo to calcualte Call/Put Prices using M.C. Simulation
-        //public static double GetCallPrice(double s, double k, double t, int steps, int trials, double sig, double r)
-        //{
-        //    double[,] simulation = new double[steps, trials];
-        //    double[,] randomNumbers = GenerateRandomNumbers(steps, trials);
-        //    double timeIncrement = Convert.ToDouble(t / (steps - 1));
-        //    double totalCallPrice = 0;
-
-        //    for (int i = 0; i < trials; i++)
-        //    {
-        //        simulation[i, 0] = s;
-
-        //        for (int j = 0; j < steps - 1; j++)
-        //        {
-        //            simulation[i, j] = simulation[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
-        //                sig * Math.Sqrt(timeIncrement) * randomNumbers[i, j - 1]);
-        //        }
-        //    }
-
-        //    for (int i = 0; i < trials; i++)
-        //    {
-        //        totalCallPrice = totalCallPrice + Math.Max(simulation[i, steps - 1] - k, 0);                
-        //    }
-
-        //    double callPrice = totalCallPrice / trials;
-
-        //    return callPrice;
-        //}
-
-        //public static double GetPutPrice(double s, double k, double t, int steps, int trials, double sig, double r)
-        //{
-        //    double[,] simulation = new double[steps, trials];
-        //    double[,] randomNumbers = GenerateRandomNumbers(steps, trials);
-        //    double timeIncrement = Convert.ToDouble(t / (steps - 1));
-        //    double totalPutPrice = 0;
-
-        //    for (int i = 0; i < trials; i++)
-        //    {
-        //        simulation[i, 0] = s;
-
-        //        for (int j = 0; j < steps - 1; j++)
-        //        {
-        //            simulation[i, j] = simulation[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
-        //                sig * Math.Sqrt(timeIncrement) * randomNumbers[i, j - 1]);
-        //        }
-        //    }
-
-        //    for (int i = 0; i < trials; i++)
-        //    {
-        //        totalCallPrice = totalCallPrice + Math.Max(simulation[i, steps - 1] - k, 0);
-        //    }
-
-        //    double callPrice = totalCallPrice / trials;
-
-        //    return callPrice;
-        //}
-        ////Algo to calculate Greeks
-
-
-
-
-        //public static Dictionary<string, double> GetPrices(double s, double k, double t, int steps, int trials, double sig, double r)
-        //{
-        //    double[,] simulation = new double[steps, trials];
-        //    double[,] randomNumbers = GenerateRandomNumbers(steps, trials);
-        //    double timeIncrement = Convert.ToDouble(t / (steps - 1));
-
-        //    double totalCallPrice = 0, totalPutPrice = 0;
-        //    Dictionary<string, double> optionPrices = new Dictionary<string, double>();
-
-        //    for (int i = 0; i < trials; i++)
-        //    {
-        //        simulation[i, 0] = s;
-
-        //        for (int j = 0; j < steps-1; j++)
-        //        {
-        //            simulation[i, j] = simulation[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
-        //                sig * Math.Sqrt(timeIncrement) * randomNumbers[i, j - 1]);
-        //        }
-        //    }
-
-        //    for (int i = 0; i < trials; i++)
-        //    {
-        //        totalCallPrice = totalCallPrice + Math.Max(simulation[i, steps - 1] - k, 0);
-        //        totalPutPrice = totalPutPrice + Math.Max(k - simulation[i, steps - 1], 0);
-        //    }
-
-        //    double callPrice = totalCallPrice / trials, putPrice = totalPutPrice / trials;
-
-        //    optionPrices.Add("callPrice", callPrice);
-        //    optionPrices.Add("putPrice", putPrice);
-
-        //    return optionPrices;
-
-        //}
-
-        //public static void CalculateGreeks(double s, double k, double t, int steps, int trials, double sig, double r, double estimateLevel = 0.01)
-        //{
-        //    double sHigh = s * (1 + estimateLevel), sLow = s * (1 - estimateLevel);
-        //    double tHigh = t * (1 + estimateLevel);
-        //    double rHigh = r * (1 + estimateLevel), rLow = r * (1 - estimateLevel);
-        //    double sigHigh = sig * (1 + estimateLevel), sighLow = sig * (1 - estimateLevel);
-
-
-
-        //    double delta = (GetPrices(sHigh, k, t, steps, trials, sig, r) - GetPrices(sLow, k, t, steps, trials, sig, r))
-        //        / (2 * estimateLevel * s);
-
-
-        //}
     }
 }
