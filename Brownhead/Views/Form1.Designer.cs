@@ -339,7 +339,8 @@
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Items.AddRange(new object[] {
             "Antithetic Variance Reduction",
-            "Control Variate"});
+            "Control Variate",
+            "Multithread Parallel Compute"});
             this.checkedListBox1.Location = new System.Drawing.Point(10, 134);
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(251, 79);
