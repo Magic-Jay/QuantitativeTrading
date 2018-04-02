@@ -530,7 +530,7 @@ namespace Brownhead.Business_Logic
             double callStandardError = Math.Round(prices["callStandardError"], 3);
             double putStandardError = Math.Round(prices["putStandardError"], 3);
             #endregion
-
+            ////// 1st portion 20%
             #region Delta 
             Dictionary<string, double> highUnderlytingPrices = GetPrices(steps, trials, sHigh, k, t, sig, r);
             double highUnderlyingCallPrice = highUnderlytingPrices["call"], highUnderlyingPutPrice = highUnderlytingPrices["put"];
@@ -548,7 +548,7 @@ namespace Brownhead.Business_Logic
             double callGamma = Math.Round((highUnderlyingCallPrice - 2 * callPrice + lowUnderlyingCallPrice) / (Math.Pow(estimateLevel * s, 2)), 3);
             double putGamma = Math.Round((highUnderlyingPutPrice - 2 * putPrice + lowUnderlyingPutPrice) / (Math.Pow(estimateLevel * s, 2)), 3);
             #endregion  
-
+            //////2nd portion 40%
             #region Theta
             Dictionary<string, double> highTPrices = GetPrices(steps, trials, s, k, tHigh, sig, r);
             double highTCallPrice = highTPrices["call"], highTPutPrice = highTPrices["put"];
@@ -557,7 +557,7 @@ namespace Brownhead.Business_Logic
             double callTheta = Math.Round(-(highTCallPrice - callPrice) / (estimateLevel * t), 3);
             double putTheta = Math.Round(-(highTPutPrice - putPrice) / (estimateLevel * t), 3);
             #endregion
-
+            /////3rd portion 60%
             #region Rho        
             Dictionary<string, double> highRPrices = GetPrices(steps, trials, s, k, t, sig, rHigh);
             double highRCallPrice = highRPrices["call"], highRPutPrice = highRPrices["put"];
@@ -569,7 +569,7 @@ namespace Brownhead.Business_Logic
             double callRho = Math.Round((highRCallPrice - lowRCallPrice) / (2 * estimateLevel * r), 3);
             double putRho = Math.Round((highRPutPrice - lowRPutPrice) / (2 * estimateLevel * r), 3);
             #endregion
-
+            /////4th portion 80%
             #region Vega           
             Dictionary<string, double> highSigPrices = GetPrices(steps, trials, s, k, t, sigHigh, r);
             double highSigCallPrice = highSigPrices["call"], highSigPutPrice = highSigPrices["put"];
@@ -581,7 +581,7 @@ namespace Brownhead.Business_Logic
             double callVega = Math.Round((highSigCallPrice - lowSigCallPrice) / (2 * estimateLevel * sig), 3);
             double putVega = Math.Round((highSigPutPrice - lowSigPutPrice) / (2 * estimateLevel * sig), 3);
             #endregion
-
+            ///////5th portion 100%
 
             table.Rows.Add("Thoretical Price", callPrice, putPrice);
             table.Rows.Add("Delta", callDelta, putDelta);

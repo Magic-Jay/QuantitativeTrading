@@ -43,7 +43,8 @@ namespace Brownhead
                         Business_Logic.PricingAlgo.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
                     }                       
                 }
-                
+
+                label11.Text = Environment.ProcessorCount.ToString() + " Cores";
                 double s = String.IsNullOrEmpty(sTextBox.Text) ? 0 : Convert.ToDouble(sTextBox.Text);
                 double k = String.IsNullOrEmpty(kTextBox.Text) ? 0 : Convert.ToDouble(kTextBox.Text);
                 double t = String.IsNullOrEmpty(tenorTextbox.Text) ? 0 : Convert.ToDouble(tenorTextbox.Text);

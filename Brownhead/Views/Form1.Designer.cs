@@ -38,6 +38,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.asyncCancelButton = new System.Windows.Forms.Button();
             this.clearingButton = new System.Windows.Forms.Button();
             this.testingButton = new System.Windows.Forms.Button();
             this.calculatePriceButton = new System.Windows.Forms.Button();
@@ -46,6 +47,8 @@
             this.timerLabel = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.StandardErrorPanel = new System.Windows.Forms.Panel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label9 = new System.Windows.Forms.Label();
             this.outputDataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -66,6 +69,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.sidePanel.SuspendLayout();
             this.headerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -160,6 +164,7 @@
             // groupBox4
             // 
             this.groupBox4.BackColor = System.Drawing.Color.White;
+            this.groupBox4.Controls.Add(this.asyncCancelButton);
             this.groupBox4.Controls.Add(this.clearingButton);
             this.groupBox4.Controls.Add(this.testingButton);
             this.groupBox4.Controls.Add(this.calculatePriceButton);
@@ -173,6 +178,19 @@
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Output Values";
+            // 
+            // asyncCancelButton
+            // 
+            this.asyncCancelButton.BackColor = System.Drawing.Color.White;
+            this.asyncCancelButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.asyncCancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.asyncCancelButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(127)))), ((int)(((byte)(160)))));
+            this.asyncCancelButton.Location = new System.Drawing.Point(355, 433);
+            this.asyncCancelButton.Name = "asyncCancelButton";
+            this.asyncCancelButton.Size = new System.Drawing.Size(101, 39);
+            this.asyncCancelButton.TabIndex = 9;
+            this.asyncCancelButton.Text = "Cancel";
+            this.asyncCancelButton.UseVisualStyleBackColor = false;
             // 
             // clearingButton
             // 
@@ -208,9 +226,9 @@
             this.calculatePriceButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.calculatePriceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.calculatePriceButton.ForeColor = System.Drawing.Color.White;
-            this.calculatePriceButton.Location = new System.Drawing.Point(297, 433);
+            this.calculatePriceButton.Location = new System.Drawing.Point(235, 433);
             this.calculatePriceButton.Name = "calculatePriceButton";
-            this.calculatePriceButton.Size = new System.Drawing.Size(159, 39);
+            this.calculatePriceButton.Size = new System.Drawing.Size(101, 39);
             this.calculatePriceButton.TabIndex = 6;
             this.calculatePriceButton.Text = "Calculate";
             this.calculatePriceButton.UseVisualStyleBackColor = false;
@@ -264,12 +282,29 @@
             // StandardErrorPanel
             // 
             this.StandardErrorPanel.BackColor = System.Drawing.Color.White;
+            this.StandardErrorPanel.Controls.Add(this.label11);
+            this.StandardErrorPanel.Controls.Add(this.progressBar1);
             this.StandardErrorPanel.Controls.Add(this.label9);
             this.StandardErrorPanel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(84)))));
             this.StandardErrorPanel.Location = new System.Drawing.Point(3, 5);
             this.StandardErrorPanel.Name = "StandardErrorPanel";
             this.StandardErrorPanel.Size = new System.Drawing.Size(217, 114);
             this.StandardErrorPanel.TabIndex = 0;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(103, 17);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(0, 28);
+            this.label11.TabIndex = 2;
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(18, 62);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(182, 35);
+            this.progressBar1.TabIndex = 1;
             // 
             // label9
             // 
@@ -570,6 +605,10 @@
         private System.Windows.Forms.Panel StandardErrorPanel;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label timerLabel;
+        private System.Windows.Forms.Button asyncCancelButton;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Label label11;
     }
 }
 
