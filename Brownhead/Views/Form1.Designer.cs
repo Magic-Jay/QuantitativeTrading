@@ -191,6 +191,7 @@
             this.asyncCancelButton.TabIndex = 9;
             this.asyncCancelButton.Text = "Cancel";
             this.asyncCancelButton.UseVisualStyleBackColor = false;
+            this.asyncCancelButton.Click += new System.EventHandler(this.asyncCancelButton_Click);
             // 
             // clearingButton
             // 
@@ -531,6 +532,12 @@
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
             // Form1
             // 
