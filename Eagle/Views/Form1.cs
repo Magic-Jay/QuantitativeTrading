@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
 
@@ -17,7 +17,9 @@ namespace Eagle
     {
         public Form1()
         {
-            InitializeComponent();            
+            InitializeComponent();
+            backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.WorkerSupportsCancellation = true;
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -26,6 +28,7 @@ namespace Eagle
             outputDataGridView.DataSource = Business_Logic.PricingAlgo.SetDataTable();
         }
 
+        #region Button Controls
         private void calculateButton_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(sTextBox.Text) || String.IsNullOrEmpty(kTextBox.Text) || String.IsNullOrEmpty(tenorTextbox.Text)
@@ -35,13 +38,13 @@ namespace Eagle
                 MessageBox.Show("Please Enter all your input!");
             }
             else
-            {                
+            {
                 foreach (var item in checkedListBox1.CheckedItems)
                 {
                     if (Business_Logic.PricingAlgo.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
                     {
                         Business_Logic.PricingAlgo.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
-                    }                       
+                    }
                 }
 
                 label11.Text = Environment.ProcessorCount.ToString() + " Cores";
@@ -53,19 +56,28 @@ namespace Eagle
                 int steps = String.IsNullOrEmpty(stepsTextBox.Text) ? 0 : Convert.ToInt32(stepsTextBox.Text);
                 int trials = String.IsNullOrEmpty(trialsTextBox.Text) ? 0 : Convert.ToInt32(trialsTextBox.Text);
 
-                try
-                {
-                    outputDataGridView.DataSource = Business_Logic.PricingAlgo.GetDataTable(steps, trials, s, k, t, sig, r);     
-                    timerLabel.Text = Convert.ToString(Business_Logic.PricingAlgo.AlgoTime) + " sec";
+                disable_CalcuateButton();
+                disable_ClearButton();
+                diable_TestingButton();
 
-                    //MessageBox.Show("Calculation Succeed!" + Business_Logic.PricingAlgo.log);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }                        
+                object[] parameter = new object[] { s, k, t, sig, r, steps, trials };
+                backgroundWorker1.RunWorkerAsync(parameter);
+            }
         }
+
+        private void asyncCancelButton_Click(object sender, EventArgs e)
+        {
+            if (backgroundWorker1.WorkerSupportsCancellation == true)
+            {
+                // Cancel the asynchronous operation.
+                backgroundWorker1.CancelAsync();
+            }
+
+            enable_CalcuateButton();
+            enable_ClearButton();
+            enable_TestingButton();
+
+        }        
 
         private void testingButton_Click(object sender, EventArgs e)
         {
@@ -88,14 +100,142 @@ namespace Eagle
             stepsTextBox.Text = "";
             trialsTextBox.Text = "";
             outputDataGridView.DataSource = Business_Logic.PricingAlgo.SetDataTable();
-            timerLabel.Text = "";            
+            timerLabel.Text = "";
+        }
+        #endregion
+
+        #region Background Worker
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            //int test = (int)e.Argument;
+
+            object[] parameters = e.Argument as object[];
+            int steps = Convert.ToInt16(parameters[5]);
+            int trials = Convert.ToInt32(parameters[6]);
+            double s = Convert.ToDouble(parameters[0]);
+            double k = Convert.ToDouble(parameters[1]);
+            double t = Convert.ToDouble(parameters[2]);
+            double sig = Convert.ToDouble(parameters[3]);
+            double r = Convert.ToDouble(parameters[4]);
+
+            try
+            {
+            //    while (!worker.CancellationPending)
+            //    {
+
+            //        if (worker.CancellationPending == true)
+            //        {
+            //            e.Cancel = true;
+            //            break;
+            //        }
+            //        else
+            //        {
+            //            // Perform a time consuming operation and report progress.
+            //            e.Result = Business_Logic.PricingAlgo.GetDataSet(steps, trials, s, k, t, sig, r);
+            //            System.Threading.Thread.Sleep(100);
+            //            //worker.ReportProgress(i * 50);
+            //        }
+
+            //    }
+            //e.Cancel = true;
+
+            for (int i = 1; i <= 1; i++)
+            {
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else
+                {
+                    // Perform a time consuming operation and report progress.
+                    e.Result = Business_Logic.PricingAlgo.GetDataSet(steps, trials, s, k, t, sig, r);
+                    System.Threading.Thread.Sleep(100);
+                    worker.ReportProgress(i * 100);
+                }
+            }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+        ////This event handler updates the progress.
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            this.progressBar1.Value = e.ProgressPercentage;           
         }
 
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled == true)
+            {
+                MessageBox.Show("Cancelled!");
+            }
+            else if (e.Error != null)
+            {
+                //resultLabel.Text = "Error: " + e.Error.Message;
+                MessageBox.Show("Error: " + e.Error.Message + "\n" +
+                            Business_Logic.PricingAlgo.log);
+            }
+            else
+            {                
+
+                var dataSet = (DataSet)e.Result;
+                outputDataGridView.DataSource = dataSet.Tables[0];
+
+                DataTable timer = dataSet.Tables[1];
+                timerLabel.Text = timer.Rows[0][0].ToString() + " sec";
+
+                MessageBox.Show("Calculation Succeed!");
+                enable_CalcuateButton();
+                enable_ClearButton();
+                enable_TestingButton();
+            }
+        }
+        #endregion
+
+        #region UI Methods
         private void disable_CalcuateButton()
         {
             calculatePriceButton.Enabled = false;
-            calculatePriceButton.BackColor = System.Drawing.Color.Gray;
+            calculatePriceButton.BackColor = Color.Gray;
         }
+
+        private void diable_TestingButton()
+        {
+            testingButton.Enabled = false;
+            testingButton.BackColor = Color.Gray;
+        }
+
+        private void disable_ClearButton()
+        {
+            clearingButton.Enabled = false;
+            clearingButton.BackColor = Color.Gray;
+
+        }
+
+        private void enable_CalcuateButton()
+        {
+            calculatePriceButton.Enabled = true;
+            calculatePriceButton.BackColor = Color.FromArgb(4, 127, 160);
+        }
+
+        private void enable_TestingButton()
+        {
+            testingButton.Enabled = true;
+            testingButton.BackColor = Color.FromArgb(0, 167, 181);
+        }
+
+        private void enable_ClearButton()
+        {
+            clearingButton.Enabled = true;
+            clearingButton.BackColor = Color.White;
+        }
+        #endregion
 
         #region Client-Side Validation       
 

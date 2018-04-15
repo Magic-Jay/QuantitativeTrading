@@ -504,19 +504,25 @@ namespace Eagle.Business_Logic
             return table;
         }
 
-        public static DataTable GetDataTable(int steps, int trials, double s, double k, double t, double sig, double r, double estimateLevel = 0.01)
+        public static DataSet GetDataSet(int steps, int trials, double s, double k, double t, double sig, double r, double estimateLevel = 0.01)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            DataTable table = new DataTable();
-            table.Columns.Add("Parameters", typeof(string));
-            table.Columns.Add("Call", typeof(double));
-            table.Columns.Add("Put", typeof(double));
+            DataSet dataSet = new DataSet("dataSet");
+            DataTable table1 = dataSet.Tables.Add();
+            DataTable timerTable = dataSet.Tables.Add();
+
+
+            #region DataTable
+           
+            table1.Columns.Add("Parameters", typeof(string));
+            table1.Columns.Add("Call", typeof(double));
+            table1.Columns.Add("Put", typeof(double));
 
             double sHigh = s * (1 + estimateLevel), sLow = s * (1 - estimateLevel);
             double tHigh = t * (1 + estimateLevel);
-            
+
             double rHigh = r * (1 + estimateLevel), rLow = r * (1 - estimateLevel);
             double sigHigh = sig * (1 + estimateLevel), sighLow = sig * (1 - estimateLevel);
 
@@ -583,13 +589,14 @@ namespace Eagle.Business_Logic
             #endregion
             ///////5th portion 100%
 
-            table.Rows.Add("Thoretical Price", callPrice, putPrice);
-            table.Rows.Add("Delta", callDelta, putDelta);
-            table.Rows.Add("Gamma", callGamma, putGamma);
-            table.Rows.Add("Theta", callTheta, putTheta);
-            table.Rows.Add("Rho", callRho, putRho);
-            table.Rows.Add("Vega", callVega, putVega);
-            table.Rows.Add("Standard Error", callStandardError, putStandardError);
+            table1.Rows.Add("Thoretical Price", callPrice, putPrice);
+            table1.Rows.Add("Delta", callDelta, putDelta);
+            table1.Rows.Add("Gamma", callGamma, putGamma);
+            table1.Rows.Add("Theta", callTheta, putTheta);
+            table1.Rows.Add("Rho", callRho, putRho);
+            table1.Rows.Add("Vega", callVega, putVega);
+            table1.Rows.Add("Standard Error", callStandardError, putStandardError);
+            #endregion
 
             //reset RandomNumbers after each Pricing Request
             RandomNumbers = null;
@@ -603,7 +610,13 @@ namespace Eagle.Business_Logic
 
             stopwatch.Stop();
             AlgoTime = Math.Round(stopwatch.Elapsed.TotalSeconds, 2);
-            return table;            
+
+            #region Timer
+            timerTable.Columns.Add("Time", typeof(double));
+            timerTable.Rows.Add(AlgoTime);
+            #endregion
+            
+            return dataSet;            
         }
 
     }
