@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Eagle.Business_Logic;
 
 
 
@@ -25,7 +26,8 @@ namespace Eagle
         private void Form_Load(object sender, EventArgs e)
         {
             disable_CalcuateButton();
-            outputDataGridView.DataSource = Business_Logic.PricingAlgo.SetDataTable();
+            outputDataGridView.DataSource = EuropeanOption.SetDataTable();
+            optionTypeComboBox.SelectedIndex = 0;
         }
 
         #region Button Controls
@@ -41,9 +43,9 @@ namespace Eagle
             {
                 foreach (var item in checkedListBox1.CheckedItems)
                 {
-                    if (Business_Logic.PricingAlgo.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
+                    if (EuropeanOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
                     {
-                        Business_Logic.PricingAlgo.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
+                        EuropeanOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
                     }
                 }
 
@@ -88,6 +90,7 @@ namespace Eagle
             rTextBox.Text = "5";
             stepsTextBox.Text = "100";
             trialsTextBox.Text = "10000";
+            optionTypeComboBox.SelectedIndex = 1;
         }
 
         private void clearingButton_Click(object sender, EventArgs e)
@@ -99,8 +102,9 @@ namespace Eagle
             rTextBox.Text = "";
             stepsTextBox.Text = "";
             trialsTextBox.Text = "";
-            outputDataGridView.DataSource = Business_Logic.PricingAlgo.SetDataTable();
+            outputDataGridView.DataSource = EuropeanOption.SetDataTable();
             timerLabel.Text = "";
+            optionTypeComboBox.SelectedIndex = 0;
         }
         #endregion
 
@@ -121,41 +125,23 @@ namespace Eagle
             double r = Convert.ToDouble(parameters[4]);
 
             try
-            {
-            //    while (!worker.CancellationPending)
-            //    {
+            {            
 
-            //        if (worker.CancellationPending == true)
-            //        {
-            //            e.Cancel = true;
-            //            break;
-            //        }
-            //        else
-            //        {
-            //            // Perform a time consuming operation and report progress.
-            //            e.Result = Business_Logic.PricingAlgo.GetDataSet(steps, trials, s, k, t, sig, r);
-            //            System.Threading.Thread.Sleep(100);
-            //            //worker.ReportProgress(i * 50);
-            //        }
-
-            //    }
-            //e.Cancel = true;
-
-            for (int i = 1; i <= 1; i++)
-            {
-                if (worker.CancellationPending == true)
+                for (int i = 1; i <= 1; i++)
                 {
-                    e.Cancel = true;
-                    break;
+                    if (worker.CancellationPending == true)
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
+                    else
+                    {
+                        // Perform a time consuming operation and report progress.
+                        e.Result = EuropeanOption.GetDataSet(steps, trials, s, k, t, sig, r);
+                        System.Threading.Thread.Sleep(100);
+                        worker.ReportProgress(i * 100);
+                    }
                 }
-                else
-                {
-                    // Perform a time consuming operation and report progress.
-                    e.Result = Business_Logic.PricingAlgo.GetDataSet(steps, trials, s, k, t, sig, r);
-                    System.Threading.Thread.Sleep(100);
-                    worker.ReportProgress(i * 100);
-                }
-            }
             }
             catch (Exception ex)
             {
@@ -179,7 +165,7 @@ namespace Eagle
             {
                 //resultLabel.Text = "Error: " + e.Error.Message;
                 MessageBox.Show("Error: " + e.Error.Message + "\n" +
-                            Business_Logic.PricingAlgo.log);
+                            EuropeanOption.log);
             }
             else
             {                

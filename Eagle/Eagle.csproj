@@ -66,7 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business Logic\PricingAlgo.cs" />
+    <Compile Include="Business Logic\EuropeanOption.cs" />
     <Compile Include="Views\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +126,7 @@
   <ItemGroup>
     <Folder Include="Controller\" />
     <Folder Include="Model\" />
+    <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
