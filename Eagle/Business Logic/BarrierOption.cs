@@ -655,11 +655,7 @@ namespace Eagle.Business_Logic
 
                 log = ex.Message + " at GetPrices() for calculating variances.";
             }
-
-            //The Variances/Standard Calculation does not need to be changed to handle antithetic logic.
-            //pricesByTrial[] Implementaion; call/putSumDifference Implementation calculate Variances using Iteration and Summation.
-            //This Implementation happen to work both for calculating Variances for single Random Variable, and Antithetic Corr. Random Variables.
-            //See PDF Documentation on correlated path in the resources for mathematical proofs. 
+            
             #endregion
 
             return prices;

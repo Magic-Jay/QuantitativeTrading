@@ -157,6 +157,8 @@ namespace Eagle
             timerLabel.Text = "";
             optionTypeComboBox.SelectedIndex = 0;
             outputDataGridView.DataSource = AsianOption.SetDataTable();
+
+            //reset checkedbox
             for(int i = 0; i < checkedListBox1.Items.Count; i++)
             {
                 checkedListBox1.SetItemChecked(i, false);
@@ -168,8 +170,7 @@ namespace Eagle
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            BackgroundWorker worker = sender as BackgroundWorker;
-            //int test = (int)e.Argument;
+            BackgroundWorker worker = sender as BackgroundWorker;           
 
             object[] parameters = e.Argument as object[];
             int steps = Convert.ToInt16(parameters[5]);
@@ -217,9 +218,9 @@ namespace Eagle
                             default:
                                 break;
                         }
+
                         // Perform a time consuming operation and report progress.
-                        
-                        System.Threading.Thread.Sleep(100);
+                        Thread.Sleep(100);
                         worker.ReportProgress(i * 100);
                     }
                 }
@@ -243,8 +244,7 @@ namespace Eagle
                 MessageBox.Show("Cancelled!");
             }
             else if (e.Error != null)
-            {
-                //resultLabel.Text = "Error: " + e.Error.Message;
+            {                
                 MessageBox.Show("Error: " + e.Error.Message + "\n" +
                             EuropeanOption.log);
             }

@@ -52,38 +52,6 @@ namespace Eagle.Business_Logic
                     }
                 }
                 #endregion
-
-
-
-                //Implementing this will be very unnecessary becuase a normal Parallel Loop will be a server overkill for 
-                //a [10,000 * 300] nested array and it slows down and kills the program due to unnecessary over head. 
-                //this could be potentially solved by using a Partioner Class to invoke Delegate only at pre-partioned frequency.
-                //But the inner-outer loop adds extra layer of complexity to this thus requires more careful work to implement. 
-                //Overall doesn't worth to parallel this. 
-                #region Parallel For Loop                
-                //var iterations = Enumerable.Range(0, trials);
-                //var rangePartitioner = Partitioner.Create(0, trials);
-
-                //Parallel.ForEach(rangePartitioner, (i, loopState) =>
-                //   {
-                //       for (int j = 0; j < steps - 1; j++)
-                //       {
-                //           do
-                //           {
-                //               x1 = 2 * rnd.NextDouble() - 1;
-                //               x2 = 2 * rnd.NextDouble() - 1;
-                //               w = Math.Pow(x1, 2) + Math.Pow(x2, 2);
-                //           } while (w > 1);
-
-                //           c = Math.Sqrt((-2) * Math.Log(w) / w);
-                //           z1 = c * x1;
-                //           z2 = c * x2;
-
-                //           matrix[i, j] = z1;
-                //       }
-                //   });
-
-                #endregion
             }
             catch (Exception ex)
             {
@@ -463,12 +431,7 @@ namespace Eagle.Business_Logic
             {
 
                 log = ex.Message + " at GetPrices() for calculating variances.";
-            }
-
-            //The Variances/Standard Calculation does not need to be changed to handle antithetic logic.
-            //pricesByTrial[] Implementaion; call/putSumDifference Implementation calculate Variances using Iteration and Summation.
-            //This Implementation happen to work both for calculating Variances for single Random Variable, and Antithetic Corr. Random Variables.
-            //See PDF Documentation on correlated path in the resources for mathematical proofs. 
+            }            
             #endregion
 
             return prices;
@@ -524,7 +487,7 @@ namespace Eagle.Business_Logic
             double callStandardError = Math.Round(prices["callStandardError"], 3);
             double putStandardError = Math.Round(prices["putStandardError"], 3);
             #endregion
-            ////// 1st portion 20%
+            
             #region Delta 
             Dictionary<string, double> highUnderlytingPrices = GetPrices(steps, trials, sHigh, k, t, sig, r, rebate);
             double highUnderlyingCallPrice = highUnderlytingPrices["call"], highUnderlyingPutPrice = highUnderlytingPrices["put"];
@@ -542,7 +505,7 @@ namespace Eagle.Business_Logic
             double callGamma = Math.Round((highUnderlyingCallPrice - 2 * callPrice + lowUnderlyingCallPrice) / (Math.Pow(estimateLevel * s, 2)), 3);
             double putGamma = Math.Round((highUnderlyingPutPrice - 2 * putPrice + lowUnderlyingPutPrice) / (Math.Pow(estimateLevel * s, 2)), 3);
             #endregion  
-            //////2nd portion 40%
+            
             #region Theta
             Dictionary<string, double> highTPrices = GetPrices(steps, trials, s, k, tHigh, sig, r, rebate);
             double highTCallPrice = highTPrices["call"], highTPutPrice = highTPrices["put"];
@@ -551,7 +514,7 @@ namespace Eagle.Business_Logic
             double callTheta = Math.Round(-(highTCallPrice - callPrice) / (estimateLevel * t), 3);
             double putTheta = Math.Round(-(highTPutPrice - putPrice) / (estimateLevel * t), 3);
             #endregion
-            /////3rd portion 60%
+            
             #region Rho        
             Dictionary<string, double> highRPrices = GetPrices(steps, trials, s, k, t, sig, rHigh, rebate);
             double highRCallPrice = highRPrices["call"], highRPutPrice = highRPrices["put"];
@@ -563,7 +526,7 @@ namespace Eagle.Business_Logic
             double callRho = Math.Round((highRCallPrice - lowRCallPrice) / (2 * estimateLevel * r), 3);
             double putRho = Math.Round((highRPutPrice - lowRPutPrice) / (2 * estimateLevel * r), 3);
             #endregion
-            /////4th portion 80%
+            
             #region Vega           
             Dictionary<string, double> highSigPrices = GetPrices(steps, trials, s, k, t, sigHigh, r, rebate);
             double highSigCallPrice = highSigPrices["call"], highSigPutPrice = highSigPrices["put"];
@@ -574,8 +537,7 @@ namespace Eagle.Business_Logic
             //Formula to calcualte Vega: dC/dsig
             double callVega = Math.Round((highSigCallPrice - lowSigCallPrice) / (2 * estimateLevel * sig), 3);
             double putVega = Math.Round((highSigPutPrice - lowSigPutPrice) / (2 * estimateLevel * sig), 3);
-            #endregion
-            ///////5th portion 100%
+            #endregion            
 
             table1.Rows.Add("Thoretical Price", callPrice, putPrice);
             table1.Rows.Add("Delta", callDelta, putDelta);

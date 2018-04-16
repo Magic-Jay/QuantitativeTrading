@@ -85,9 +85,7 @@ namespace Eagle.Business_Logic
             }
 
             try
-            {
-                //Formula to genearte simulation using antithetic method referenced from lecture notes
-
+            {                
                 //Sequential For Loop
                 if (!multiThreading)
                 {
@@ -102,8 +100,6 @@ namespace Eagle.Business_Logic
 
                         for (int j = 1; j < steps; j++)
                         {
-
-
                             //regular
                             simulationRegular[i, j] = simulationRegular[i, j - 1] * Math.Exp(((r - Math.Pow(sig, 2) / 2)) * timeIncrement +
                                 sig * Math.Sqrt(timeIncrement) * RandomNumbers[i, j - 1]);
@@ -433,12 +429,7 @@ namespace Eagle.Business_Logic
             {
 
                 log = ex.Message + " at GetPrices() for calculating variances.";
-            }
-
-            //The Variances/Standard Calculation does not need to be changed to handle antithetic logic.
-            //pricesByTrial[] Implementaion; call/putSumDifference Implementation calculate Variances using Iteration and Summation.
-            //This Implementation happen to work both for calculating Variances for single Random Variable, and Antithetic Corr. Random Variables.
-            //See PDF Documentation on correlated path in the resources for mathematical proofs. 
+            }            
             #endregion
 
             return prices;
@@ -506,7 +497,7 @@ namespace Eagle.Business_Logic
             //Formula to Calculate Gamma referencing class notes: d^2C/dS^2
             double callGamma = Math.Round((highUnderlyingCallPrice - 2 * callPrice + lowUnderlyingCallPrice) / (Math.Pow(estimateLevel * s, 2)), 3);            
             #endregion  
-            //////2nd portion 40%
+           
             #region Theta
             Dictionary<string, double> highTPrices = GetPrices(steps, trials, s, k, tHigh, sig, r, rebate);
             double highTCallPrice = highTPrices["call"];
@@ -515,7 +506,7 @@ namespace Eagle.Business_Logic
             double callTheta = Math.Round(-(highTCallPrice - callPrice) / (estimateLevel * t), 3);
 
             #endregion
-            /////3rd portion 60%
+            
             #region Rho        
             Dictionary<string, double> highRPrices = GetPrices(steps, trials, s, k, t, sig, rHigh, rebate);
             double highRCallPrice = highRPrices["call"];
@@ -526,7 +517,7 @@ namespace Eagle.Business_Logic
             //Formula to calculate Rho: dC/dr
             double callRho = Math.Round((highRCallPrice - lowRCallPrice) / (2 * estimateLevel * r), 3);            
             #endregion
-            /////4th portion 80%
+            
             #region Vega           
             Dictionary<string, double> highSigPrices = GetPrices(steps, trials, s, k, t, sigHigh, r, rebate);
             double highSigCallPrice = highSigPrices["call"];
@@ -536,8 +527,7 @@ namespace Eagle.Business_Logic
 
             //Formula to calcualte Vega: dC/dsig
             double callVega = Math.Round((highSigCallPrice - lowSigCallPrice) / (2 * estimateLevel * sig), 3);            
-            #endregion
-            ///////5th portion 100%
+            #endregion            
 
             table1.Rows.Add("Thoretical Price", callPrice);
             table1.Rows.Add("Delta", callDelta);
