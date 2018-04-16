@@ -68,7 +68,9 @@
   <ItemGroup>
     <Compile Include="Business Logic\AsianOption.cs" />
     <Compile Include="Business Logic\BarrierOption.cs" />
+    <Compile Include="Business Logic\DigitalOption.cs" />
     <Compile Include="Business Logic\EuropeanOption.cs" />
+    <Compile Include="Business Logic\LookBackOption.cs" />
     <Compile Include="Views\Form1.cs">
       <SubType>Form</SubType>
     </Compile>

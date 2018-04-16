@@ -59,6 +59,10 @@ namespace Eagle
             {
                 MessageBox.Show("Please Enter all your input!");
             }
+            else if ((type == "Barrier" || type == "Digital") & (String.IsNullOrEmpty(amountTextBox.Text)))
+            {
+                MessageBox.Show("Please Enter all your input!");
+            }
             else
             {
                 foreach (var item in checkedListBox1.CheckedItems)
@@ -76,6 +80,24 @@ namespace Eagle
                             if (AsianOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
                             {
                                 AsianOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
+                            }
+                            break;
+                        case "Barrier":
+                            if (BarrierOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
+                            {
+                                BarrierOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
+                            }
+                            break;
+                        case "Digital":
+                            if (DigitalOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
+                            {
+                                DigitalOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
+                            }
+                            break;
+                        case "Lookback":
+                            if (LookBackOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
+                            {
+                                LookBackOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
                             }
                             break;
                         default:
@@ -186,6 +208,12 @@ namespace Eagle
                             case "Barrier":
                                 e.Result = BarrierOption.GetDataSet(steps, trials, s, k, t, sig, r, exoticAmount);
                                 break;
+                            case "Digital":
+                                e.Result = DigitalOption.GetDataSet(steps, trials, s, k, t, sig, r, exoticAmount);
+                                break;
+                            case "Lookback":
+                                e.Result = LookBackOption.GetDataSet(steps, trials, s, k, t, sig, r, exoticAmount);
+                                break;
                             default:
                                 break;
                         }
@@ -290,7 +318,7 @@ namespace Eagle
                 case 3:
                     amountLabel.Text = "Rebate Price";
                     amountTextBox.Visible = true;
-                    outputDataGridView.DataSource = EuropeanOption.SetDataTable();
+                    outputDataGridView.DataSource = DigitalOption.SetDataTable();
                     break;
 
                 default:
