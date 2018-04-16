@@ -29,20 +29,7 @@ namespace Eagle
             optionTypeComboBox.SelectedIndex = 1;
             string type = optionTypeComboBox.SelectedItem.ToString();
             outputDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            outputDataGridView.DataSource = EuropeanOption.SetDataTable();
-
-            //switch (type)
-            //{
-            //    case "None":
-            //        outputDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                    
-            //        break;
-            //    case "Asian":
-            //        outputDataGridView.DataSource = AsianOption.SetDataTable();
-            //        break;
-            //    default:
-            //        break;
-            //}
+            outputDataGridView.DataSource = EuropeanOption.SetDataTable();           
                        
             amountLabel.Text = "";
             amountTextBox.Visible = false;
@@ -98,6 +85,12 @@ namespace Eagle
                             if (LookBackOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
                             {
                                 LookBackOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
+                            }
+                            break;
+                        case "Range":
+                            if (RangeOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
+                            {
+                                RangeOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
                             }
                             break;
                         default:
@@ -164,6 +157,10 @@ namespace Eagle
             timerLabel.Text = "";
             optionTypeComboBox.SelectedIndex = 0;
             outputDataGridView.DataSource = AsianOption.SetDataTable();
+            for(int i = 0; i < checkedListBox1.Items.Count; i++)
+            {
+                checkedListBox1.SetItemChecked(i, false);
+            }
         }
         #endregion
 
@@ -213,6 +210,9 @@ namespace Eagle
                                 break;
                             case "Lookback":
                                 e.Result = LookBackOption.GetDataSet(steps, trials, s, k, t, sig, r, exoticAmount);
+                                break;
+                            case "Range":
+                                e.Result = RangeOption.GetDataSet(steps, trials, s, k, t, sig, r, exoticAmount);
                                 break;
                             default:
                                 break;
@@ -320,7 +320,9 @@ namespace Eagle
                     amountTextBox.Visible = true;
                     outputDataGridView.DataSource = DigitalOption.SetDataTable();
                     break;
-
+                case 5:                    
+                    outputDataGridView.DataSource = RangeOption.SetDataTable();
+                    break;
                 default:
                     amountLabel.Text = "";
                     amountTextBox.Visible = false;
