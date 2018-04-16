@@ -26,13 +26,33 @@ namespace Eagle
         private void Form_Load(object sender, EventArgs e)
         {
             disable_CalcuateButton();
+            optionTypeComboBox.SelectedIndex = 1;
+            string type = optionTypeComboBox.SelectedItem.ToString();
+            outputDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             outputDataGridView.DataSource = EuropeanOption.SetDataTable();
-            optionTypeComboBox.SelectedIndex = 0;
+
+            //switch (type)
+            //{
+            //    case "None":
+            //        outputDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                    
+            //        break;
+            //    case "Asian":
+            //        outputDataGridView.DataSource = AsianOption.SetDataTable();
+            //        break;
+            //    default:
+            //        break;
+            //}
+                       
+            amountLabel.Text = "";
+            amountTextBox.Visible = false;
         }
 
         #region Button Controls
         private void calculateButton_Click(object sender, EventArgs e)
         {
+            string type = optionTypeComboBox.SelectedItem.ToString();
+
             if (String.IsNullOrEmpty(sTextBox.Text) || String.IsNullOrEmpty(kTextBox.Text) || String.IsNullOrEmpty(tenorTextbox.Text)
                 || String.IsNullOrEmpty(sigTextBox.Text) || String.IsNullOrEmpty(rTextBox.Text) || String.IsNullOrEmpty(stepsTextBox.Text)
                 || String.IsNullOrEmpty(trialsTextBox.Text))
@@ -42,11 +62,27 @@ namespace Eagle
             else
             {
                 foreach (var item in checkedListBox1.CheckedItems)
-                {
-                    if (EuropeanOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
+                {                    
+
+                    switch (type)
                     {
-                        EuropeanOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
+                        case "None":
+                            if (EuropeanOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
+                            {
+                                EuropeanOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
+                            }
+                            break;
+                        case "Asian":
+                            if (AsianOption.VaraianceReductionOptions.ContainsKey(item.ToString().Replace(' ', '_')))
+                            {
+                                AsianOption.VaraianceReductionOptions[item.ToString().Replace(' ', '_')] = true;
+                            }
+                            break;
+                        default:
+                            break;
                     }
+
+                    
                 }
 
                 label11.Text = Environment.ProcessorCount.ToString() + " Cores";
@@ -57,12 +93,13 @@ namespace Eagle
                 double r = String.IsNullOrEmpty(rTextBox.Text) ? 0 : (Convert.ToDouble(rTextBox.Text) / 100);
                 int steps = String.IsNullOrEmpty(stepsTextBox.Text) ? 0 : Convert.ToInt32(stepsTextBox.Text);
                 int trials = String.IsNullOrEmpty(trialsTextBox.Text) ? 0 : Convert.ToInt32(trialsTextBox.Text);
+                double exoticAmount = string.IsNullOrEmpty(amountTextBox.Text) ? 0 : Convert.ToInt32(amountTextBox.Text);
 
                 disable_CalcuateButton();
                 disable_ClearButton();
                 diable_TestingButton();
 
-                object[] parameter = new object[] { s, k, t, sig, r, steps, trials };
+                object[] parameter = new object[] { s, k, t, sig, r, steps, trials, type, exoticAmount};
                 backgroundWorker1.RunWorkerAsync(parameter);
             }
         }
@@ -102,9 +139,9 @@ namespace Eagle
             rTextBox.Text = "";
             stepsTextBox.Text = "";
             trialsTextBox.Text = "";
-            outputDataGridView.DataSource = EuropeanOption.SetDataTable();
             timerLabel.Text = "";
             optionTypeComboBox.SelectedIndex = 0;
+            outputDataGridView.DataSource = AsianOption.SetDataTable();
         }
         #endregion
 
@@ -123,6 +160,8 @@ namespace Eagle
             double t = Convert.ToDouble(parameters[2]);
             double sig = Convert.ToDouble(parameters[3]);
             double r = Convert.ToDouble(parameters[4]);
+            string type = parameters[7].ToString();
+            double exoticAmount = Convert.ToDouble(parameters[8]);
 
             try
             {            
@@ -136,8 +175,22 @@ namespace Eagle
                     }
                     else
                     {
+                        switch (type)
+                        {
+                            case "None":
+                                e.Result = EuropeanOption.GetDataSet(steps, trials, s, k, t, sig, r);
+                                break;
+                            case "Asian":
+                                e.Result = AsianOption.GetDataSet(steps, trials, s, k, t, sig, r);
+                                break;
+                            case "Barrier":
+                                e.Result = BarrierOption.GetDataSet(steps, trials, s, k, t, sig, r, exoticAmount);
+                                break;
+                            default:
+                                break;
+                        }
                         // Perform a time consuming operation and report progress.
-                        e.Result = EuropeanOption.GetDataSet(steps, trials, s, k, t, sig, r);
+                        
                         System.Threading.Thread.Sleep(100);
                         worker.ReportProgress(i * 100);
                     }
@@ -221,9 +274,36 @@ namespace Eagle
             clearingButton.Enabled = true;
             clearingButton.BackColor = Color.White;
         }
+
+        private void optionTypeComboBox_SelectedIndexChanted(object sender, EventArgs e)
+        {
+            int index = optionTypeComboBox.SelectedIndex;
+            switch (index)
+            {
+                case 2:
+                    amountLabel.Text = "Barrier Price";
+                    amountTextBox.Visible = true;
+                    outputDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                    outputDataGridView.DataSource = BarrierOption.SetDataTable();
+                    break;
+
+                case 3:
+                    amountLabel.Text = "Rebate Price";
+                    amountTextBox.Visible = true;
+                    outputDataGridView.DataSource = EuropeanOption.SetDataTable();
+                    break;
+
+                default:
+                    amountLabel.Text = "";
+                    amountTextBox.Visible = false;
+                    outputDataGridView.DataSource = EuropeanOption.SetDataTable();
+                    break;
+            }                       
+        }
         #endregion
 
-        #region Client-Side Validation       
+        #region Client-Side Validation    
+        
 
         private void sTextBox_TextChanged(object sender, EventArgs e)
         {

@@ -52,6 +52,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.outputDataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.optionTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.stepsTextBox = new System.Windows.Forms.TextBox();
@@ -70,8 +72,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.optionTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
+            this.amountLabel = new System.Windows.Forms.Label();
+            this.amountTextBox = new System.Windows.Forms.TextBox();
             this.sidePanel.SuspendLayout();
             this.headerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -331,6 +333,8 @@
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.White;
+            this.groupBox2.Controls.Add(this.amountTextBox);
+            this.groupBox2.Controls.Add(this.amountLabel);
             this.groupBox2.Controls.Add(this.optionTypeComboBox);
             this.groupBox2.Controls.Add(this.label12);
             this.groupBox2.Controls.Add(this.groupBox5);
@@ -352,6 +356,37 @@
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Input";
+            // 
+            // optionTypeComboBox
+            // 
+            this.optionTypeComboBox.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.optionTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.optionTypeComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.optionTypeComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.optionTypeComboBox.FormattingEnabled = true;
+            this.optionTypeComboBox.Items.AddRange(new object[] {
+            "None",
+            "Asian",
+            "Barrier",
+            "Digital",
+            "Lookback",
+            "Range"});
+            this.optionTypeComboBox.Location = new System.Drawing.Point(171, 183);
+            this.optionTypeComboBox.Name = "optionTypeComboBox";
+            this.optionTypeComboBox.Size = new System.Drawing.Size(101, 33);
+            this.optionTypeComboBox.TabIndex = 25;
+            this.optionTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.optionTypeComboBox_SelectedIndexChanted);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(127)))), ((int)(((byte)(160)))));
+            this.label12.Location = new System.Drawing.Point(6, 193);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(140, 23);
+            this.label12.TabIndex = 26;
+            this.label12.Text = "Exotic Option";
             // 
             // groupBox5
             // 
@@ -431,50 +466,55 @@
             // tenorTextbox
             // 
             this.tenorTextbox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.tenorTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tenorTextbox.Location = new System.Drawing.Point(165, 177);
+            this.tenorTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tenorTextbox.Location = new System.Drawing.Point(171, 150);
+            this.tenorTextbox.Multiline = true;
             this.tenorTextbox.Name = "tenorTextbox";
-            this.tenorTextbox.Size = new System.Drawing.Size(76, 35);
+            this.tenorTextbox.Size = new System.Drawing.Size(76, 26);
             this.tenorTextbox.TabIndex = 21;
             this.tenorTextbox.TextChanged += new System.EventHandler(this.tenorTextBox_TextChanged);
             // 
             // sigTextBox
             // 
             this.sigTextBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.sigTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sigTextBox.Location = new System.Drawing.Point(165, 141);
+            this.sigTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sigTextBox.Location = new System.Drawing.Point(171, 119);
+            this.sigTextBox.Multiline = true;
             this.sigTextBox.Name = "sigTextBox";
-            this.sigTextBox.Size = new System.Drawing.Size(76, 35);
+            this.sigTextBox.Size = new System.Drawing.Size(76, 26);
             this.sigTextBox.TabIndex = 20;
             this.sigTextBox.TextChanged += new System.EventHandler(this.sigTextBox_TextChanged);
             // 
             // rTextBox
             // 
             this.rTextBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.rTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rTextBox.Location = new System.Drawing.Point(165, 105);
+            this.rTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rTextBox.Location = new System.Drawing.Point(171, 88);
+            this.rTextBox.Multiline = true;
             this.rTextBox.Name = "rTextBox";
-            this.rTextBox.Size = new System.Drawing.Size(76, 35);
+            this.rTextBox.Size = new System.Drawing.Size(76, 26);
             this.rTextBox.TabIndex = 19;
             this.rTextBox.TextChanged += new System.EventHandler(this.rTextBox_TextChanged);
             // 
             // kTextBox
             // 
             this.kTextBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.kTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.kTextBox.Location = new System.Drawing.Point(165, 69);
+            this.kTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.kTextBox.Location = new System.Drawing.Point(171, 57);
+            this.kTextBox.Multiline = true;
             this.kTextBox.Name = "kTextBox";
-            this.kTextBox.Size = new System.Drawing.Size(76, 35);
+            this.kTextBox.Size = new System.Drawing.Size(76, 26);
             this.kTextBox.TabIndex = 18;
             this.kTextBox.TextChanged += new System.EventHandler(this.kTextBox_TextChanged);
             // 
             // sTextBox
             // 
             this.sTextBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.sTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sTextBox.Location = new System.Drawing.Point(165, 33);
+            this.sTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sTextBox.Location = new System.Drawing.Point(171, 26);
+            this.sTextBox.Multiline = true;
             this.sTextBox.Name = "sTextBox";
-            this.sTextBox.Size = new System.Drawing.Size(76, 35);
+            this.sTextBox.Size = new System.Drawing.Size(76, 26);
             this.sTextBox.TabIndex = 17;
             this.sTextBox.TextChanged += new System.EventHandler(this.sTextBox_TextChanged);
             // 
@@ -483,7 +523,7 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(127)))), ((int)(((byte)(160)))));
-            this.label6.Location = new System.Drawing.Point(12, 181);
+            this.label6.Location = new System.Drawing.Point(6, 161);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(62, 23);
             this.label6.TabIndex = 16;
@@ -494,7 +534,7 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(127)))), ((int)(((byte)(160)))));
-            this.label5.Location = new System.Drawing.Point(12, 144);
+            this.label5.Location = new System.Drawing.Point(6, 129);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(117, 23);
             this.label5.TabIndex = 15;
@@ -505,7 +545,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(127)))), ((int)(((byte)(160)))));
-            this.label4.Location = new System.Drawing.Point(12, 107);
+            this.label4.Location = new System.Drawing.Point(6, 97);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(154, 23);
             this.label4.TabIndex = 14;
@@ -516,7 +556,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(127)))), ((int)(((byte)(160)))));
-            this.label3.Location = new System.Drawing.Point(12, 70);
+            this.label3.Location = new System.Drawing.Point(6, 65);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(116, 23);
             this.label3.TabIndex = 13;
@@ -527,7 +567,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(127)))), ((int)(((byte)(160)))));
-            this.label2.Location = new System.Drawing.Point(12, 33);
+            this.label2.Location = new System.Drawing.Point(6, 33);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(168, 23);
             this.label2.TabIndex = 12;
@@ -543,35 +583,26 @@
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
-            // optionTypeComboBox
+            // amountLabel
             // 
-            this.optionTypeComboBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.optionTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.optionTypeComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.optionTypeComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.optionTypeComboBox.FormattingEnabled = true;
-            this.optionTypeComboBox.Items.AddRange(new object[] {
-            "None",
-            "Asian",
-            "Barrier",
-            "Digital",
-            "Lookback",
-            "Range"});
-            this.optionTypeComboBox.Location = new System.Drawing.Point(165, 213);
-            this.optionTypeComboBox.Name = "optionTypeComboBox";
-            this.optionTypeComboBox.Size = new System.Drawing.Size(101, 37);
-            this.optionTypeComboBox.TabIndex = 25;
+            this.amountLabel.AutoSize = true;
+            this.amountLabel.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.amountLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(127)))), ((int)(((byte)(160)))));
+            this.amountLabel.Location = new System.Drawing.Point(6, 225);
+            this.amountLabel.Name = "amountLabel";
+            this.amountLabel.Size = new System.Drawing.Size(87, 23);
+            this.amountLabel.TabIndex = 27;
+            this.amountLabel.Text = "Amount";
             // 
-            // label12
+            // amountTextBox
             // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(127)))), ((int)(((byte)(160)))));
-            this.label12.Location = new System.Drawing.Point(12, 218);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(140, 23);
-            this.label12.TabIndex = 26;
-            this.label12.Text = "Exotic Option";
+            this.amountTextBox.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.amountTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.amountTextBox.Location = new System.Drawing.Point(171, 219);
+            this.amountTextBox.Multiline = true;
+            this.amountTextBox.Name = "amountTextBox";
+            this.amountTextBox.Size = new System.Drawing.Size(76, 26);
+            this.amountTextBox.TabIndex = 28;
             // 
             // Form1
             // 
@@ -652,6 +683,8 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox optionTypeComboBox;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox amountTextBox;
+        private System.Windows.Forms.Label amountLabel;
     }
 }
 
