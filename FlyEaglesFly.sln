@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brownhead", "Brownhead\Brow
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eagle", "Eagle\Eagle.csproj", "{35F94C73-2778-4AE2-A4A1-FCD3A367B839}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioApp", "PortfolioApp\PortfolioApp.csproj", "{588AEC23-6F85-46F9-B1E7-7CC81BD87906}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monte Carlo 6.1", "monte carlo 6.1\Monte Carlo 6.1\Monte Carlo 6.1.csproj", "{2F9E30CE-AC26-4C23-88B3-4A7540BC355D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +59,10 @@ Global
 		{35F94C73-2778-4AE2-A4A1-FCD3A367B839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35F94C73-2778-4AE2-A4A1-FCD3A367B839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35F94C73-2778-4AE2-A4A1-FCD3A367B839}.Release|Any CPU.Build.0 = Release|Any CPU
-		{588AEC23-6F85-46F9-B1E7-7CC81BD87906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{588AEC23-6F85-46F9-B1E7-7CC81BD87906}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{588AEC23-6F85-46F9-B1E7-7CC81BD87906}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{588AEC23-6F85-46F9-B1E7-7CC81BD87906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F9E30CE-AC26-4C23-88B3-4A7540BC355D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F9E30CE-AC26-4C23-88B3-4A7540BC355D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F9E30CE-AC26-4C23-88B3-4A7540BC355D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F9E30CE-AC26-4C23-88B3-4A7540BC355D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

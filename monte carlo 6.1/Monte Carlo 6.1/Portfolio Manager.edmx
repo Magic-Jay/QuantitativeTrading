@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Portfolio_x0020_Manager.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="Portfolio_x0020_ManagerStoreContainer">
+    <EntitySet Name="Instruments" EntityType="Portfolio_x0020_Manager.Store.Instruments" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Prices" EntityType="Portfolio_x0020_Manager.Store.Prices" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Trades" EntityType="Portfolio_x0020_Manager.Store.Trades" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InterestRates" EntityType="Portfolio_x0020_Manager.Store.InterestRates" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InstTypes" EntityType="Portfolio_x0020_Manager.Store.InstTypes" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="InstrumentInstType" Association="Portfolio_x0020_Manager.Store.InstrumentInstType">
+      <End Role="Instrument" EntitySet="Instruments" />
+      <End Role="InstType" EntitySet="InstTypes" />
+    </AssociationSet>
+    <AssociationSet Name="InstrumentTrade" Association="Portfolio_x0020_Manager.Store.InstrumentTrade">
+      <End Role="Instrument" EntitySet="Instruments" />
+      <End Role="Trade" EntitySet="Trades" />
+    </AssociationSet>
+    <AssociationSet Name="InstrumentPrice" Association="Portfolio_x0020_Manager.Store.InstrumentPrice">
+      <End Role="Instrument" EntitySet="Instruments" />
+      <End Role="Price" EntitySet="Prices" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Instruments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyName" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Ticker" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Exchange" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Strike" Type="float" Nullable="false" />
+    <Property Name="Tenor" Type="float" Nullable="false" />
+    <Property Name="IsCall" Type="bit" Nullable="true" />
+    <Property Name="InstTypeId" Type="int" Nullable="false" />
+    <Property Name="Barrier" Type="float" Nullable="true" />
+    <Property Name="Rebate" Type="float" Nullable="true" />
+    <Property Name="PriceId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Prices">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="ClosingPrice" Type="float" Nullable="false" />
+    <Property Name="CompanyName" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Trades">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IsBuy" Type="bit" Nullable="false" />
+    <Property Name="Quantity" Type="float" Nullable="false" />
+    <Property Name="Price" Type="float" Nullable="false" />
+    <Property Name="Timestamp" Type="datetime" Nullable="false" />
+    <Property Name="InstrumentId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InterestRates">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Tenor" Type="float" Nullable="false" />
+    <Property Name="Rate" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InstTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TypeName" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <Association Name="InstrumentInstType">
+    <End Role="Instrument" Type="Portfolio_x0020_Manager.Store.Instruments" Multiplicity="*" />
+    <End Role="InstType" Type="Portfolio_x0020_Manager.Store.InstTypes" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="InstType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Instrument">
+        <PropertyRef Name="InstTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="InstrumentTrade">
+    <End Role="Instrument" Type="Portfolio_x0020_Manager.Store.Instruments" Multiplicity="1" />
+    <End Role="Trade" Type="Portfolio_x0020_Manager.Store.Trades" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Instrument">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Trade">
+        <PropertyRef Name="InstrumentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="InstrumentPrice">
+    <End Role="Instrument" Type="Portfolio_x0020_Manager.Store.Instruments" Multiplicity="*" />
+    <End Role="Price" Type="Portfolio_x0020_Manager.Store.Prices" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Price">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Instrument">
+        <PropertyRef Name="PriceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Portfolio_x0020_Manager" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="Portfolio_x0020_ManagerContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Instruments" EntityType="Portfolio_x0020_Manager.Instrument" />
+          <EntitySet Name="Prices" EntityType="Portfolio_x0020_Manager.Price" />
+          <EntitySet Name="Trades" EntityType="Portfolio_x0020_Manager.Trade" />
+          <EntitySet Name="InterestRates" EntityType="Portfolio_x0020_Manager.InterestRate" />
+          <EntitySet Name="InstTypes" EntityType="Portfolio_x0020_Manager.InstType" />
+          <AssociationSet Name="InstrumentInstType" Association="Portfolio_x0020_Manager.InstrumentInstType">
+            <End Role="Instrument" EntitySet="Instruments" />
+            <End Role="InstType" EntitySet="InstTypes" />
+          </AssociationSet>
+          <AssociationSet Name="InstrumentTrade" Association="Portfolio_x0020_Manager.InstrumentTrade">
+            <End Role="Instrument" EntitySet="Instruments" />
+            <End Role="Trade" EntitySet="Trades" />
+          </AssociationSet>
+          <AssociationSet Name="InstrumentPrice" Association="Portfolio_x0020_Manager.InstrumentPrice">
+            <End Role="Instrument" EntitySet="Instruments" />
+            <End Role="Price" EntitySet="Prices" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Instrument">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyName" Type="String" Nullable="true" />
+          <Property Name="Ticker" Type="String" Nullable="false" />
+          <Property Name="Exchange" Type="String" Nullable="false" />
+          <Property Name="Strike" Type="Double" Nullable="false" />
+          <Property Name="Tenor" Type="Double" Nullable="false" />
+          <Property Name="IsCall" Type="Boolean" Nullable="true" />
+          <NavigationProperty Name="InstType" Relationship="Portfolio_x0020_Manager.InstrumentInstType" FromRole="Instrument" ToRole="InstType" />
+          <Property Name="InstTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Trades" Relationship="Portfolio_x0020_Manager.InstrumentTrade" FromRole="Instrument" ToRole="Trade" />
+          <Property Name="Barrier" Type="Double" Nullable="true" />
+          <Property Name="Rebate" Type="Double" Nullable="true" />
+          <NavigationProperty Name="Price" Relationship="Portfolio_x0020_Manager.InstrumentPrice" FromRole="Instrument" ToRole="Price" />
+          <Property Name="PriceId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Price">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" />
+          <Property Name="ClosingPrice" Type="Double" Nullable="false" />
+          <Property Name="CompanyName" Type="String" Nullable="false" />
+          <NavigationProperty Name="Instruments" Relationship="Portfolio_x0020_Manager.InstrumentPrice" FromRole="Price" ToRole="Instrument" />
+        </EntityType>
+        <EntityType Name="Trade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsBuy" Type="Boolean" Nullable="false" />
+          <Property Name="Quantity" Type="Double" Nullable="false" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="Timestamp" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Instrument" Relationship="Portfolio_x0020_Manager.InstrumentTrade" FromRole="Trade" ToRole="Instrument" />
+          <Property Name="InstrumentId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InterestRate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tenor" Type="Double" Nullable="false" />
+          <Property Name="Rate" Type="Double" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InstType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeName" Type="String" Nullable="false" />
+          <NavigationProperty Name="Instruments" Relationship="Portfolio_x0020_Manager.InstrumentInstType" FromRole="InstType" ToRole="Instrument" />
+        </EntityType>
+        <Association Name="InstrumentInstType">
+          <End Type="Portfolio_x0020_Manager.Instrument" Role="Instrument" Multiplicity="*" />
+          <End Type="Portfolio_x0020_Manager.InstType" Role="InstType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="InstType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Instrument">
+              <PropertyRef Name="InstTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="InstrumentTrade">
+          <End Type="Portfolio_x0020_Manager.Instrument" Role="Instrument" Multiplicity="1" />
+          <End Type="Portfolio_x0020_Manager.Trade" Role="Trade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Instrument">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Trade">
+              <PropertyRef Name="InstrumentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="InstrumentPrice">
+          <End Type="Portfolio_x0020_Manager.Instrument" Role="Instrument" Multiplicity="*" />
+          <End Type="Portfolio_x0020_Manager.Price" Role="Price" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="Price">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Instrument">
+              <PropertyRef Name="PriceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Portfolio_x0020_ManagerStoreContainer" CdmEntityContainer="Portfolio_x0020_ManagerContainer">
+    <EntitySetMapping Name="Instruments">
+      <EntityTypeMapping TypeName="IsTypeOf(Portfolio_x0020_Manager.Instrument)">
+        <MappingFragment StoreEntitySet="Instruments">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+          <ScalarProperty Name="Ticker" ColumnName="Ticker" />
+          <ScalarProperty Name="Exchange" ColumnName="Exchange" />
+          <ScalarProperty Name="Strike" ColumnName="Strike" />
+          <ScalarProperty Name="Tenor" ColumnName="Tenor" />
+          <ScalarProperty Name="IsCall" ColumnName="IsCall" />
+          <ScalarProperty Name="InstTypeId" ColumnName="InstTypeId" />
+          <ScalarProperty Name="Barrier" ColumnName="Barrier" />
+          <ScalarProperty Name="Rebate" ColumnName="Rebate" />
+          <ScalarProperty Name="PriceId" ColumnName="PriceId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Prices">
+      <EntityTypeMapping TypeName="IsTypeOf(Portfolio_x0020_Manager.Price)">
+        <MappingFragment StoreEntitySet="Prices">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="ClosingPrice" ColumnName="ClosingPrice" />
+          <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Trades">
+      <EntityTypeMapping TypeName="IsTypeOf(Portfolio_x0020_Manager.Trade)">
+        <MappingFragment StoreEntitySet="Trades">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IsBuy" ColumnName="IsBuy" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+          <ScalarProperty Name="InstrumentId" ColumnName="InstrumentId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InterestRates">
+      <EntityTypeMapping TypeName="IsTypeOf(Portfolio_x0020_Manager.InterestRate)">
+        <MappingFragment StoreEntitySet="InterestRates">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Tenor" ColumnName="Tenor" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InstTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(Portfolio_x0020_Manager.InstType)">
+        <MappingFragment StoreEntitySet="InstTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
