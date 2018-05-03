@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Monte_Carlo_6._1
+namespace PortfolioApp
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace Monte_Carlo_6._1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new My_Portfolio_Manager());
+            Application.Run(new Form1());
         }
     }
 }

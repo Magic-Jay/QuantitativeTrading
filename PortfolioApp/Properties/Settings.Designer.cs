@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Monte_Carlo_6._1.Properties
+namespace PortfolioApp.Properties
 {
 
 
