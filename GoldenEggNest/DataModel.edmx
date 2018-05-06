@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PortfolioAppModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BarrierTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BarrierName" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DailyPrices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="ClosingPrice" Type="float" Nullable="false" />
+          <Property Name="InstrumentId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Instruments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Ticker" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Exchange" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Strike" Type="float" Nullable="false" />
+          <Property Name="Tenor" Type="float" />
+          <Property Name="IsCall" Type="bit" />
+          <Property Name="Barrier" Type="float" />
+          <Property Name="Rebate" Type="float" />
+          <Property Name="InstrumentTypeId" Type="int" Nullable="false" />
+          <Property Name="BarrierTypeId" Type="int" />
+        </EntityType>
+        <EntityType Name="InstrumentTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeName" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InterestRates">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Tenor" Type="float" />
+          <Property Name="Rate" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Trades">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsBuy" Type="bit" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="Price" Type="float" />
+          <Property Name="TimeStamp" Type="datetime" Nullable="false" />
+          <Property Name="InstrumentId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_BarrierTypeInstrument">
+          <End Role="BarrierTypes" Type="Self.BarrierTypes" Multiplicity="0..1" />
+          <End Role="Instruments" Type="Self.Instruments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BarrierTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Instruments">
+              <PropertyRef Name="BarrierTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InstrumentTypeInstrument">
+          <End Role="InstrumentTypes" Type="Self.InstrumentTypes" Multiplicity="1" />
+          <End Role="Instruments" Type="Self.Instruments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InstrumentTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Instruments">
+              <PropertyRef Name="InstrumentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PriceInstrument">
+          <End Role="Instruments" Type="Self.Instruments" Multiplicity="1" />
+          <End Role="DailyPrices" Type="Self.DailyPrices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Instruments">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyPrices">
+              <PropertyRef Name="InstrumentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TradeInstrument">
+          <End Role="Instruments" Type="Self.Instruments" Multiplicity="1" />
+          <End Role="Trades" Type="Self.Trades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Instruments">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Trades">
+              <PropertyRef Name="InstrumentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="retrieveInstruments" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="PortfolioAppModelStoreContainer">
+          <EntitySet Name="BarrierTypes" EntityType="Self.BarrierTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DailyPrices" EntityType="Self.DailyPrices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Instruments" EntityType="Self.Instruments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InstrumentTypes" EntityType="Self.InstrumentTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InterestRates" EntityType="Self.InterestRates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Trades" EntityType="Self.Trades" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BarrierTypeInstrument" Association="Self.FK_BarrierTypeInstrument">
+            <End Role="BarrierTypes" EntitySet="BarrierTypes" />
+            <End Role="Instruments" EntitySet="Instruments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InstrumentTypeInstrument" Association="Self.FK_InstrumentTypeInstrument">
+            <End Role="InstrumentTypes" EntitySet="InstrumentTypes" />
+            <End Role="Instruments" EntitySet="Instruments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PriceInstrument" Association="Self.FK_PriceInstrument">
+            <End Role="Instruments" EntitySet="Instruments" />
+            <End Role="DailyPrices" EntitySet="DailyPrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TradeInstrument" Association="Self.FK_TradeInstrument">
+            <End Role="Instruments" EntitySet="Instruments" />
+            <End Role="Trades" EntitySet="Trades" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PortfolioAppModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BarrierType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BarrierName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Instruments" Relationship="Self.FK_BarrierTypeInstrument" FromRole="BarrierTypes" ToRole="Instruments" />
+        </EntityType>
+        <EntityType Name="DailyPrice">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClosingPrice" Type="Double" Nullable="false" />
+          <Property Name="InstrumentId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Instrument" Relationship="Self.FK_PriceInstrument" FromRole="DailyPrices" ToRole="Instruments" />
+        </EntityType>
+        <EntityType Name="Instrument">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Ticker" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Exchange" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Strike" Type="Double" Nullable="false" />
+          <Property Name="Tenor" Type="Double" />
+          <Property Name="IsCall" Type="Boolean" />
+          <Property Name="Barrier" Type="Double" />
+          <Property Name="Rebate" Type="Double" />
+          <Property Name="InstrumentTypeId" Type="Int32" Nullable="false" />
+          <Property Name="BarrierTypeId" Type="Int32" />
+          <NavigationProperty Name="BarrierType" Relationship="Self.FK_BarrierTypeInstrument" FromRole="Instruments" ToRole="BarrierTypes" />
+          <NavigationProperty Name="DailyPrices" Relationship="Self.FK_PriceInstrument" FromRole="Instruments" ToRole="DailyPrices" />
+          <NavigationProperty Name="InstrumentType" Relationship="Self.FK_InstrumentTypeInstrument" FromRole="Instruments" ToRole="InstrumentTypes" />
+          <NavigationProperty Name="Trades" Relationship="Self.FK_TradeInstrument" FromRole="Instruments" ToRole="Trades" />
+        </EntityType>
+        <EntityType Name="InstrumentType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Instruments" Relationship="Self.FK_InstrumentTypeInstrument" FromRole="InstrumentTypes" ToRole="Instruments" />
+        </EntityType>
+        <EntityType Name="InterestRate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tenor" Type="Double" />
+          <Property Name="Rate" Type="Double" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Trade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsBuy" Type="Boolean" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Double" />
+          <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="InstrumentId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Instrument" Relationship="Self.FK_TradeInstrument" FromRole="Trades" ToRole="Instruments" />
+        </EntityType>
+        <Association Name="FK_BarrierTypeInstrument">
+          <End Role="BarrierTypes" Type="Self.BarrierType" Multiplicity="0..1" />
+          <End Role="Instruments" Type="Self.Instrument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BarrierTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Instruments">
+              <PropertyRef Name="BarrierTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PriceInstrument">
+          <End Role="Instruments" Type="Self.Instrument" Multiplicity="1" />
+          <End Role="DailyPrices" Type="Self.DailyPrice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Instruments">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyPrices">
+              <PropertyRef Name="InstrumentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InstrumentTypeInstrument">
+          <End Role="InstrumentTypes" Type="Self.InstrumentType" Multiplicity="1" />
+          <End Role="Instruments" Type="Self.Instrument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InstrumentTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Instruments">
+              <PropertyRef Name="InstrumentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TradeInstrument">
+          <End Role="Instruments" Type="Self.Instrument" Multiplicity="1" />
+          <End Role="Trades" Type="Self.Trade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Instruments">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Trades">
+              <PropertyRef Name="InstrumentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PortfolioAppEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BarrierTypes" EntityType="Self.BarrierType" />
+          <EntitySet Name="DailyPrices" EntityType="Self.DailyPrice" />
+          <EntitySet Name="Instruments" EntityType="Self.Instrument" />
+          <EntitySet Name="InstrumentTypes" EntityType="Self.InstrumentType" />
+          <EntitySet Name="InterestRates" EntityType="Self.InterestRate" />
+          <EntitySet Name="Trades" EntityType="Self.Trade" />
+          <AssociationSet Name="FK_BarrierTypeInstrument" Association="Self.FK_BarrierTypeInstrument">
+            <End Role="BarrierTypes" EntitySet="BarrierTypes" />
+            <End Role="Instruments" EntitySet="Instruments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PriceInstrument" Association="Self.FK_PriceInstrument">
+            <End Role="Instruments" EntitySet="Instruments" />
+            <End Role="DailyPrices" EntitySet="DailyPrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InstrumentTypeInstrument" Association="Self.FK_InstrumentTypeInstrument">
+            <End Role="InstrumentTypes" EntitySet="InstrumentTypes" />
+            <End Role="Instruments" EntitySet="Instruments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TradeInstrument" Association="Self.FK_TradeInstrument">
+            <End Role="Instruments" EntitySet="Instruments" />
+            <End Role="Trades" EntitySet="Trades" />
+          </AssociationSet>
+          <FunctionImport Name="retrieveInstruments" ReturnType="Collection(PortfolioAppModel.retrieveInstruments_Result)" />
+        </EntityContainer>
+        <ComplexType Name="retrieveInstruments_Result">
+          <Property Type="Int32" Name="InstrumentId" Nullable="false" />
+          <Property Type="String" Name="Instrument" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PortfolioAppModelStoreContainer" CdmEntityContainer="PortfolioAppEntities">
+          <EntitySetMapping Name="BarrierTypes">
+            <EntityTypeMapping TypeName="PortfolioAppModel.BarrierType">
+              <MappingFragment StoreEntitySet="BarrierTypes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BarrierName" ColumnName="BarrierName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailyPrices">
+            <EntityTypeMapping TypeName="PortfolioAppModel.DailyPrice">
+              <MappingFragment StoreEntitySet="DailyPrices">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ClosingPrice" ColumnName="ClosingPrice" />
+                <ScalarProperty Name="InstrumentId" ColumnName="InstrumentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Instruments">
+            <EntityTypeMapping TypeName="PortfolioAppModel.Instrument">
+              <MappingFragment StoreEntitySet="Instruments">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Ticker" ColumnName="Ticker" />
+                <ScalarProperty Name="Exchange" ColumnName="Exchange" />
+                <ScalarProperty Name="Strike" ColumnName="Strike" />
+                <ScalarProperty Name="Tenor" ColumnName="Tenor" />
+                <ScalarProperty Name="IsCall" ColumnName="IsCall" />
+                <ScalarProperty Name="Barrier" ColumnName="Barrier" />
+                <ScalarProperty Name="Rebate" ColumnName="Rebate" />
+                <ScalarProperty Name="InstrumentTypeId" ColumnName="InstrumentTypeId" />
+                <ScalarProperty Name="BarrierTypeId" ColumnName="BarrierTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InstrumentTypes">
+            <EntityTypeMapping TypeName="PortfolioAppModel.InstrumentType">
+              <MappingFragment StoreEntitySet="InstrumentTypes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InterestRates">
+            <EntityTypeMapping TypeName="PortfolioAppModel.InterestRate">
+              <MappingFragment StoreEntitySet="InterestRates">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Tenor" ColumnName="Tenor" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Trades">
+            <EntityTypeMapping TypeName="PortfolioAppModel.Trade">
+              <MappingFragment StoreEntitySet="Trades">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IsBuy" ColumnName="IsBuy" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+                <ScalarProperty Name="InstrumentId" ColumnName="InstrumentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="retrieveInstruments" FunctionName="PortfolioAppModel.Store.retrieveInstruments" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PortfolioAppModel.retrieveInstruments_Result">
+                <ScalarProperty Name="InstrumentId" ColumnName="InstrumentId" />
+                <ScalarProperty Name="Instrument" ColumnName="Instrument" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
