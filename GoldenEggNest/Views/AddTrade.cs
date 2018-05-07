@@ -21,32 +21,78 @@ namespace GoldenEggNest
 
         private void Add_Trade_Load(object sender, EventArgs e)
         {
-            comboBoxInst.Items.AddRange((from q in AppEntity.Instruments
-                                               group q by q.Ticker into g
-                                               select g.Key).ToArray());
-            //comboBoxInstType.Items.AddRange((from q in AppEntity.InstTypes
-            //                                   group q by q.TypeName into g
-            //                                   select g.Key).ToArray());
+            List<String> instrumentsNames = new List<String>();
+            var instruments = AppEntity.retrieveInstruments();
+            foreach (var item in instruments)
+            {
+                instrumentsNames.Add(item.Instrument);
+            }
+
+            comboBoxInst.Items.AddRange(instrumentsNames.ToArray());
         }
 
         private void Add_Click(object sender, EventArgs e)
         {
-            Instrument inst = (from g in AppEntity.Instruments
-                                 where g.Ticker == comboBoxInst.Text
-                                 select g).FirstOrDefault();
+            Int32 instrumentId = 0;
 
-            AppEntity.Trades.Add(new Trade()
+            foreach (var inst in AppEntity.retrieveInstruments())
             {
-                IsBuy = radioButton1.Checked ? true : false,
-                Quantity  = textBoxQuantity.Text == string.Empty ? 0 : Convert.ToInt32(textBoxQuantity.Text),
-                Price = (textBoxTradePrice.Text == string.Empty ? 0.0 : Convert.ToInt32(textBoxTradePrice.Text)),
-                TimeStamp = DateTime.Now,
-                InstrumentId = inst.Id,
-            });
-            AppEntity.SaveChanges();
-            MessageBox.Show("Trade added successfully!");
-            this.Dispose();
+                if (inst.Instrument == comboBoxInst.Text)
+                {
+                    instrumentId = inst.InstrumentId;
+                }
+            }
+
+            if (validate_Input())
+            {
+                AppEntity.Trades.Add(new Trade()
+                {
+                    IsBuy = radioButton1.Checked ? true : false,
+                    Quantity = textBoxQuantity.Text == string.Empty ? 0 : Convert.ToInt32(textBoxQuantity.Text),
+                    Price = (textBoxTradePrice.Text == string.Empty ? 0.0 : Convert.ToInt32(textBoxTradePrice.Text)),
+                    TimeStamp = DateTime.Now,
+                    InstrumentId = instrumentId,
+                });
+
+                AppEntity.SaveChanges();
+                MessageBox.Show("Trade added successfully!");
+                this.Dispose();
+            }
+           
+        }
         
+        private bool validate_Input()
+        {
+            bool result = true;
+            double quantity, price;
+
+            if (!radioButton1.Checked && !radioButton2.Checked)
+            {
+                MessageBox.Show("Please make a buy/sell selection!");
+                result = false;
+            }
+
+            if (comboBoxInst.SelectedItem == null)
+            {
+                MessageBox.Show("Please make a Instrument selection!");
+                result = false;
+            }
+
+            if (!double.TryParse(textBoxQuantity.Text, out quantity) ||
+               Convert.ToDouble(textBoxQuantity.Text) <= 0 || textBoxQuantity.Text.ToString() == string.Empty)
+            {
+                MessageBox.Show("Please Enter a Valid Quantity.");
+                result = false;
+            }
+
+            if (!double.TryParse(textBoxTradePrice.Text, out price) ||
+               Convert.ToDouble(textBoxTradePrice.Text) <= 0 || textBoxTradePrice.Text.ToString() == string.Empty)
+            {
+                MessageBox.Show("Please Enter a Valid Trade Price.");
+                result = false;
+            }
+
+            return result;
         }
 
         private void Cancel_Click(object sender, EventArgs e)

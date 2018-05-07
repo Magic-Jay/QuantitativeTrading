@@ -17,11 +17,22 @@ namespace GoldenEggNest
         private void Add_Instrument_Load(object sender, EventArgs e)
         {
             textBoxBarrier.Enabled = false;
-            textBoxRebate.Enabled = false;            
+            textBoxRebate.Enabled = false;
 
             comboBoxInstruType.Items.AddRange((from q in AppEntity.InstrumentTypes
                                                group q by q.TypeName into g
                                                select g.Key).ToArray());
+
+
+            var test = AppEntity.retrieveInstruments();
+
+            //comboBoxInstruType.Items.AddRange((from q in retrieveInstruments_Result
+            //                                   group q by q.))
+
+            foreach (retrieveInstruments_Result item in test)
+            {
+                var a = item.InstrumentId + item.Instrument;            
+            }
 
             comboBoxBarrierType.Items.AddRange((from q in AppEntity.BarrierTypes
                                                 group q by q.BarrierName into g
@@ -40,7 +51,7 @@ namespace GoldenEggNest
                                        where b.BarrierName == comboBoxBarrierType.Text
                                        select b).FirstOrDefault();
 
-            if (ValidateInput())
+            if (validate_Input())
             {
                 
                 AppEntity.Instruments.Add(new Instrument()
@@ -70,7 +81,7 @@ namespace GoldenEggNest
             this.Close();
         }
 
-        private bool ValidateInput()
+        private bool validate_Input()
         {
             bool result = true; 
 

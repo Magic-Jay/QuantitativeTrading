@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="ef6a618c40344900b312aa66bfb18f3b" Name="Diagram1">
-        <EntityTypeShape EntityType="PortfolioAppModel.BarrierType" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PortfolioAppModel.BarrierType" Width="1.5" PointX="1" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="PortfolioAppModel.DailyPrice" Width="1.5" PointX="8.125" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="PortfolioAppModel.Instrument" Width="1.5" PointX="4.375" PointY="1.625" IsExpanded="true" />
         <EntityTypeShape EntityType="PortfolioAppModel.InstrumentType" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />

@@ -180,6 +180,7 @@
             this.listSum.TabIndex = 1;
             this.listSum.UseCompatibleStateImageBehavior = false;
             this.listSum.View = System.Windows.Forms.View.Details;
+            this.listSum.SelectedIndexChanged += new System.EventHandler(this.listSum_SelectedIndexChanged);
             // 
             // TotalPLs
             // 
@@ -229,7 +230,7 @@
             this.Thetas});
             this.ListTrade.FullRowSelect = true;
             this.ListTrade.GridLines = true;
-            this.ListTrade.Location = new System.Drawing.Point(12, 336);
+            this.ListTrade.Location = new System.Drawing.Point(12, 332);
             this.ListTrade.Name = "ListTrade";
             this.ListTrade.Size = new System.Drawing.Size(1034, 209);
             this.ListTrade.TabIndex = 2;
