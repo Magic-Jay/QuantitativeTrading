@@ -1,4 +1,7 @@
-# Application that prices financial options and manages each trade for the client. 
+# QuantitativeTrading
+
+Application that prices financial options and manages each trade for the client. 
+
 
 ### SetUp 
 
@@ -9,6 +12,7 @@
 3. set `Project Eagle` as startup project to review the Financial Calculator
 
 4. set `Project Golden Egg Nest` as start up project to review Portfolio Management App. 
+
 
 ### Project Eagle
 1. Calculating Financial options' prices upon maturity using:
@@ -57,10 +61,11 @@
 3. Using .NET EF LINQ
 
 
-### Calculating Financial Products' prices
+## Project Captures 
+### Price Calculator
 ![alt text](https://github.com/MagicGary/Trading-App/blob/master/img3.JPG)
 
-### CRUD Portfolio App 
+### Portfolio Management App 
 ![alt text](https://github.com/MagicGary/Trading-App/blob/master/img5.JPG)
 
 ### EF Data Model
