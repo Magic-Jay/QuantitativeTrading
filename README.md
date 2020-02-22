@@ -34,7 +34,7 @@ Application that prices financial options and manages each trade for the client.
 3. Improved algorithm computation speed by 70% using:
 
   
-    1. [.NET Core Parallel Computing](https://docs.microsoft.com/en-us/dotnet/standard/parallel-processing-and-concurrency) 
+    1. [.NET Framework Parallel Computing](https://docs.microsoft.com/en-us/dotnet/standard/parallel-processing-and-concurrency) 
   
   
     2. [.NET Background Worker to acheive asynchronized simulation](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.backgroundworker?view=netframework-4.8)
