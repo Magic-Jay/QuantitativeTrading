@@ -1,6 +1,6 @@
 # QuantitativeTrading
 
-Application that prices financial options and manages each trade for the client. 
+Windows Desktop Application that prices financial options and manages each trade for the client. 
 
 
 ### SetUp 
