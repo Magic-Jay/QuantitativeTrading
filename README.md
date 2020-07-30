@@ -1,8 +1,8 @@
 # QuantitativeTrading
 
-Windows Desktop Application that prices financial options and manages each trade for the client. 
+<a href="https://www.dropbox.com/s/ry98p4sbceolbl2/Eagle.exe?dl=1" target="_blank">Windows Desktop Application</a> that prices financial options and manages each trade for the client. 
 
-<a href="https://www.dropbox.com/s/ry98p4sbceolbl2/Eagle.exe?dl=1" target="_blank">Click here to Download and Run the App locally</a>
+
 
 
 ### SetUp 
